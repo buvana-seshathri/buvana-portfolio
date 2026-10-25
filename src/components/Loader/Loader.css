@@ -1,0 +1,76 @@
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  overflow: hidden;
+  /* same deep gradient as the hero stage, so the hand-off feels continuous */
+  background: linear-gradient(135deg in oklab, var(--stage-deep) 0%, var(--stage-mid) 50%, var(--stage-indigo) 100%);
+  transition: opacity 0.9s ease, filter 0.9s ease, transform 0.9s ease;
+}
+
+.loader::before,
+.loader::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+}
+
+.loader::before {
+  width: 50vw; height: 50vw; left: -12vw; top: -24vw;
+  background: var(--stage-electric);
+  opacity: 0.26;
+}
+
+.loader::after {
+  width: 45vw; height: 40vw; right: -10vw; bottom: -20vw;
+  background: var(--stage-purple);
+  opacity: 0.26;
+}
+
+.loader canvas { display: block; position: relative; z-index: 1; }
+
+.loader--leaving {
+  opacity: 0;
+  filter: blur(14px);
+  transform: scale(1.04);
+  pointer-events: none;
+}
+
+.loader__status {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  bottom: calc(7vh + env(safe-area-inset-bottom, 0px));
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--stage-text-soft);
+}
+
+.loader__status b {
+  font-style: normal;
+  font-weight: 600;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+/* shown for the split second before the 3D scene loads */
+.loader__fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(64px, 14vw, 180px);
+  letter-spacing: -0.03em;
+  font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 144;
+  color: rgba(198, 213, 255, 0.12);
+}

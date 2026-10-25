@@ -1,0 +1,260 @@
+.hero {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding-block: calc(64px + env(safe-area-inset-top, 0px)) 24px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+.stage {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: min(88svh, 920px);
+  min-height: 620px;
+  border-radius: var(--radius-stage);
+  overflow: hidden;
+  background: var(--stage-deep);
+  color: var(--stage-text);
+  box-shadow: 0 50px 90px -50px rgba(5, 5, 7, 0.7);
+}
+
+/* ---------- deep mesh gradient ----------
+   A deep base, then big soft color fields blurred together so the blend stays smooth. */
+.stage__glows {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: linear-gradient(135deg in oklab, var(--stage-deep) 0%, var(--stage-mid) 45%, var(--stage-indigo) 100%);
+}
+
+.stage__glows i {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.85;
+  will-change: transform;
+  animation: drift 22s ease-in-out infinite alternate;
+}
+
+.stage__glows i:nth-child(1) {   /* electric, top-left */
+  width: 55%; height: 70%; left: -16%; top: -34%;
+  background: var(--stage-electric);
+  opacity: 0.3;
+}
+.stage__glows i:nth-child(2) {   /* blueberry, behind the carousel */
+  width: 45%; height: 60%; right: 4%; top: 20%;
+  background: var(--stage-purple);
+  opacity: 0.26;
+  animation-duration: 26s;
+  animation-delay: -8s;
+}
+.stage__glows i:nth-child(3) {   /* indigo-violet, bottom */
+  width: 70%; height: 55%; left: 22%; bottom: -40%;
+  background: var(--stage-purple);
+  opacity: 0.22;
+  animation-duration: 30s;
+  animation-delay: -14s;
+}
+.stage__glows i:nth-child(4) {   /* periwinkle highlight, top-right */
+  width: 28%; height: 34%; right: -6%; top: -14%;
+  background: var(--stage-electric);
+  opacity: 0.14;
+  animation-duration: 18s;
+}
+
+@keyframes drift {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(4%, 6%) scale(1.08); }
+  100% { transform: translate(-3%, 2%) scale(0.96); }
+}
+
+/* 3D sits on the right; the copy on the left */
+.stage__canvas {
+  position: absolute;
+  inset: 0 0 0 40%;
+  z-index: 1;
+  cursor: grab;
+  touch-action: pan-y;
+}
+.stage__canvas:active { cursor: grabbing; }
+
+.stage__content {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(20px, 4.4vw, 64px);
+  pointer-events: none;
+}
+
+.stage__content a { pointer-events: auto; }
+
+.stage__meta {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--stage-text-faint);
+}
+
+.stage__copy { max-width: 40rem; min-width: 0; }
+
+.eyebrow {
+  margin: 0 0 18px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--stage-text-faint);
+}
+
+.headline {
+  margin: 0 0 22px;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.6rem, 6.1vw, 6.25rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  font-variation-settings: "opsz" 144, "SOFT" 30;
+  color: var(--stage-text);
+}
+
+.headline > span { display: block; }
+
+.headline em {
+  position: relative;
+  display: inline-block;
+  font-style: italic;
+  font-weight: 450;
+  padding-right: 0.06em;
+  font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+}
+
+/* the electric highlight under "build" */
+.headline em::after {
+  content: "";
+  position: absolute;
+  left: -0.02em;
+  right: 0.04em;
+  bottom: 0.08em;
+  height: 0.15em;
+  z-index: -1;
+  border-radius: 2px;
+  background: linear-gradient(90deg in oklab, rgba(76, 98, 245, 0.85), rgba(109, 74, 224, 0.85));
+  transform-origin: left;
+  animation: underline 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.9s both;
+}
+
+html:not([data-loaded]) .headline em::after { animation-play-state: paused; }
+
+@keyframes underline {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.lede {
+  margin: 0 0 30px;
+  font-size: clamp(14px, 1.15vw, 17px);
+  line-height: 1.6;
+  color: var(--stage-text-soft);
+}
+
+.lede span {
+  display: block;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 21px;
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: transform 0.2s, background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.btn:active { transform: scale(0.97); }
+.btn .arrow { transition: transform 0.2s; }
+.btn:hover .arrow { transform: translateX(3px); }
+
+.btn--solid {
+  background: #fff;
+  color: var(--c-indigo);
+}
+.btn--solid:hover { background: var(--c-cloud); }
+
+.btn--outline {
+  color: var(--stage-text);
+  border: 1px solid var(--stage-line);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(8px);
+}
+.btn--outline:hover {
+  border-color: var(--c-blueberry);
+  background: rgba(129, 155, 255, 0.16);
+}
+
+.scroll-cue {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--stage-text-faint);
+  margin-top: -12px;
+}
+
+.scroll-cue i {
+  width: 1px;
+  height: 28px;
+  background: linear-gradient(var(--stage-text-faint), transparent);
+  animation: cue 2s ease-in-out infinite;
+}
+
+@keyframes cue {
+  0%, 100% { transform: scaleY(0.4); transform-origin: top; }
+  50% { transform: scaleY(1); transform-origin: top; }
+}
+
+/* entry, same rhythm as Hero 32: rise out of a blur; waits for the loader */
+html:not([data-loaded]) .rise { animation-play-state: paused; }
+
+.rise {
+  animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) var(--d, 0s) both;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(26px); filter: blur(10px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+
+@media (max-width: 860px) {
+  .hero { padding-top: calc(60px + env(safe-area-inset-top, 0px)); }
+  .stage { height: auto; min-height: 88svh; }
+  .stage__canvas { inset: 0 0 46% 0; }
+  .lede { font-size: min(3.05vw, 16px); }
+  .btn { padding: 11px 16px; font-size: 13px; }
+  .scroll-cue { display: none; }
+}

@@ -1,0 +1,43 @@
+/* Theme tokens. Components read only these variables.
+   To add a theme: copy this block, rename the selector (e.g. [data-theme="groovy-baby"]),
+   change the values, and add the matching 3D palette in themes.js. */
+:root,
+[data-theme="modern-minimal"] {
+  /* palette */
+  --c-cloud: #F0F4FF;
+  --c-periwinkle: #C6D5FF;
+  --c-blueberry: #819BFF;
+  --c-electric: #4C62F5;
+  --c-indigo: #302C83;
+
+  /* page: bright white, so the deep hero stage pops */
+  --page-bg: #F7F8FD;
+  --page-text: var(--c-indigo);
+  --page-text-muted: rgba(48, 44, 131, 0.6);
+
+  /* hero stage: deep multi-color gradient */
+  --stage-deep: #050507;        /* near-black */
+  --stage-mid: #0A0912;         /* black with a hint of indigo */
+  --stage-indigo: #110F22;      /* deepest indigo-black */
+  --stage-electric: #3B4EE6;    /* electric blue glow */
+  --stage-purple: #6D4AE0;      /* purple glow */
+  --stage-glow: var(--c-blueberry);
+  --stage-text: #FFFFFF;
+  --stage-text-soft: rgba(240, 244, 255, 0.76);
+  --stage-text-faint: rgba(240, 244, 255, 0.52);
+  --stage-line: rgba(198, 213, 255, 0.28);
+
+  --accent: var(--c-electric);
+  --accent-soft: var(--c-periwinkle);
+
+  /* type */
+  --font-display: 'Fraunces Variable', 'Fraunces', Georgia, serif;
+  --font-body: 'Instrument Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+  /* shape */
+  --radius-stage: 28px;
+  --radius-pill: 999px;
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(48, 44, 131, 0.1);
+}
