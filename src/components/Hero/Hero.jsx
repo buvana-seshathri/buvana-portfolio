@@ -9,12 +9,13 @@ function Arrow() {
   return <span className="arrow" aria-hidden="true">→</span>;
 }
 
-export default function Hero() {
+// `active` is false while another page is open, so the 3D carousel stops rendering.
+export default function Hero({ active = true }) {
   const stageRef = useRef(null);
   const { hero } = site;
 
   return (
-    <section className="hero" id="top">
+    <section className="hero">
       <div className="stage" ref={stageRef}>
         <div className="stage__glows" aria-hidden="true">
           <i /><i /><i /><i />
@@ -22,7 +23,7 @@ export default function Hero() {
 
         <div className="stage__canvas" aria-label="Photo carousel, drag to spin">
           <Suspense fallback={null}>
-            <PhotoCarousel />
+            <PhotoCarousel active={active} />
           </Suspense>
         </div>
 

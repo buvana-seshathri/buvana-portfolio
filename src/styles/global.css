@@ -30,6 +30,20 @@ a { color: inherit; }
   border-radius: 6px;
 }
 
+/* entry for page content: rise out of a blur every time its page opens.
+   Mark elements with class "rise" and stagger them with style="--d: 0.2s".
+   It waits behind the loader, and replays whenever you come back to the page. */
+.page.is-current .rise {
+  animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) var(--d, 0s) both;
+}
+
+html:not([data-loaded]) .page .rise { animation-play-state: paused; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(26px); filter: blur(10px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }

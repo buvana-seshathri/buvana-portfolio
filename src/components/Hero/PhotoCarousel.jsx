@@ -229,9 +229,15 @@ function Scene() {
   );
 }
 
-export default function PhotoCarousel() {
+// `active` pauses rendering while the hero page is off screen
+export default function PhotoCarousel({ active = true }) {
   return (
-    <Canvas dpr={[1, 2]} camera={{ position: [0, 1.4, 10], fov: 15 }} gl={{ antialias: true, alpha: true }}>
+    <Canvas
+      frameloop={active ? 'always' : 'never'}
+      dpr={[1, 2]}
+      camera={{ position: [0, 1.4, 10], fov: 15 }}
+      gl={{ antialias: true, alpha: true }}
+    >
       <Scene />
     </Canvas>
   );

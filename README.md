@@ -15,14 +15,18 @@ npm run dev
 
 ```
 src/
-  content/site.js            all copy (nav, hero text, buttons)
+  content/site.js            all copy (nav, hero text, buttons, about card + facts)
   theme/themes.css           theme tokens (colors, fonts, glows) per [data-theme]
   theme/themes.js            3D material colors per theme
   styles/global.css          reset, grain overlay, focus, reduced motion
-  components/Nav/            centered glass pill nav
+  components/Nav/            centered glass pill nav (highlights the open page)
+  components/Pager/          full-screen pages that slide in; #hash links open a page directly
   components/Loader/         solid "buvana" block letters filling with a gradient (R3F), fades into the page
   components/Hero/           dark stage hero + PhotoCarousel (R3F photo ring + name ribbon)
+  components/About/          arch photo with sparkles, bio card that flips to fun facts on hover
+  components/Journey/        "the story so far": vertical timeline that draws itself as you scroll
   assets/carousel/           carousel photos: 1.jpg, 2.jpg, ... (placeholders for now)
+  assets/about/photo.jpg     the About photo
   assets/fonts/              Fraunces soft-black "buvana" glyphs as a three.js typeface
 tools/make-typeface.mjs      regenerate the 3D glyph from a TTF
 ```
@@ -38,6 +42,21 @@ shows up automatically, in number order. No code to edit.
 - Restart `npm run dev` after adding new files if they don't show up right away.
 
 The carousel is adapted from the pmndrs "cards with border radius" example (MIT).
+
+## About photo
+
+Replace `src/assets/about/photo.jpg` with any portrait photo (keep the name). It's cropped to an 11:15 arch,
+so a tall photo with your face in the upper half works best; around 1100px wide is plenty.
+Text for the card (both sides) lives in `site.about` in `src/content/site.js`; the timeline is `site.journey`.
+
+## Pages
+
+The site is a set of full-screen pages that slide in (wheel, swipe, arrow/Page keys, or the nav).
+Each page has its own link: `/` is home, `/#about` opens About and `/#journey` the timeline (after the loader).
+
+To add a page, add it to `PAGES` in `src/App.jsx` with an `id`, and point its nav link in `site.js` at `#<id>`.
+Mark anything that should rise in when the page opens with `className="rise"` and stagger it with
+`style={{ '--d': '0.2s' }}`.
 
 ## Handy URL flags
 

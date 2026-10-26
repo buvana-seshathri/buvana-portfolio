@@ -9,11 +9,22 @@
   --c-blueberry: #819BFF;
   --c-electric: #4C62F5;
   --c-indigo: #302C83;
+  --c-lavender: #E2DCFB;        /* soft purple tint (Research tags on the Journey page) */
 
   /* page: bright white, so the deep hero stage pops */
   --page-bg: #F7F8FD;
   --page-text: var(--c-indigo);
   --page-text-muted: rgba(48, 44, 131, 0.6);
+  --page-text-soft: #5E5B9E;      /* small labels and details (passes 4.5:1 on the page) */
+  --page-text-body: #3E3A8C;      /* paragraphs */
+  --page-line: rgba(48, 44, 131, 0.14);
+
+  /* cards on the white page */
+  --card-bg: #FFFFFF;
+  --card-border: rgba(48, 44, 131, 0.1);
+  --card-shadow: 0 30px 60px -36px rgba(48, 44, 131, 0.45);
+  --highlight: rgba(198, 213, 255, 0.6);   /* text-selection style highlight */
+  --highlight-gradient: linear-gradient(90deg, rgba(76, 98, 245, 0.32), rgba(109, 74, 224, 0.32));
 
   /* hero stage: deep multi-color gradient */
   --stage-deep: #050507;        /* near-black */
@@ -37,6 +48,7 @@
 
   /* shape */
   --radius-stage: 28px;
+  --radius-card: 18px;
   --radius-pill: 999px;
   --glass-bg: rgba(255, 255, 255, 0.72);
   --glass-border: rgba(48, 44, 131, 0.1);

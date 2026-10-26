@@ -150,8 +150,13 @@
   border-radius: 2px;
   background: linear-gradient(90deg in oklab, rgba(76, 98, 245, 0.85), rgba(109, 74, 224, 0.85));
   transform-origin: left;
+}
+
+/* draws itself in each time the hero page opens */
+.page.is-current .headline em::after {
   animation: underline 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.9s both;
 }
+.page.is-entering .headline em::after { animation-delay: 1.35s; }
 
 html:not([data-loaded]) .headline em::after { animation-play-state: paused; }
 
@@ -238,17 +243,7 @@ html:not([data-loaded]) .headline em::after { animation-play-state: paused; }
   50% { transform: scaleY(1); transform-origin: top; }
 }
 
-/* entry, same rhythm as Hero 32: rise out of a blur; waits for the loader */
-html:not([data-loaded]) .rise { animation-play-state: paused; }
-
-.rise {
-  animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) var(--d, 0s) both;
-}
-
-@keyframes rise {
-  from { opacity: 0; transform: translateY(26px); filter: blur(10px); }
-  to { opacity: 1; transform: none; filter: none; }
-}
+/* the .rise entry animation lives in styles/global.css and replays whenever this page opens */
 
 @media (max-width: 860px) {
   .hero { padding-top: calc(60px + env(safe-area-inset-top, 0px)); }

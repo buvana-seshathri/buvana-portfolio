@@ -1,0 +1,297 @@
+/* Journey page: a vertical timeline, cards alternating either side of a line that draws itself as you scroll.
+   On phones it becomes one column with the line on the left. */
+.journey {
+  min-height: 100%;
+  padding-block: calc(96px + env(safe-area-inset-top, 0px)) calc(120px + env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+.journey__wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+/* ---------- heading ---------- */
+.journey__head {
+  margin-bottom: clamp(48px, 7vw, 80px);
+  text-align: center;
+}
+
+.journey__heading {
+  margin: 0 0 14px;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.75rem, 5.4vw, 4.75rem);
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  font-variation-settings: "opsz" 144, "SOFT" 30;
+  color: var(--page-text);
+}
+
+.journey__heading em {
+  font-style: italic;
+  font-weight: 450;
+  padding-right: 0.06em;
+  font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+  background: var(--highlight-gradient) no-repeat 0 86% / 100% 0.2em;
+}
+
+.journey__lede {
+  margin: 0;
+  font-size: 17px;
+  color: var(--page-text-soft);
+}
+
+/* ---------- the line ---------- */
+.journey__track {
+  --progress: 0;
+  --dot: 18px;
+  --gutter: 64px; /* the middle column the line and dots live in */
+  position: relative;
+}
+
+.journey__line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  margin-left: -1px;
+  border-radius: 2px;
+  background: var(--page-line);
+}
+
+.journey__fill {
+  position: absolute;
+  inset: 0 0 auto;
+  height: calc(var(--progress) * 100%);
+  border-radius: 2px;
+  background: linear-gradient(180deg in oklab, var(--c-periwinkle), var(--c-blueberry) 35%, var(--accent) 70%, var(--stage-purple));
+}
+
+/* a soft glowing tip that leads the line */
+.journey__fill::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 5px rgba(76, 98, 245, 0.18), 0 0 18px 4px rgba(109, 74, 224, 0.45);
+  opacity: min(1, calc(var(--progress) * 40));
+}
+
+/* ---------- steps ---------- */
+.journey__steps {
+  position: relative;
+  display: grid;
+  gap: clamp(28px, 4vw, 44px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.journey__step {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--gutter) minmax(0, 1fr);
+  grid-template-areas: "card dot .";
+  align-items: start;
+}
+.journey__step.is-right { grid-template-areas: ". dot card"; }
+
+/* cards sit on alternate sides, so each one can tuck up beside the one before it */
+.journey__step + .journey__step { margin-top: -96px; }
+
+.journey__card { grid-area: card; }
+.journey__dot { grid-area: dot; justify-self: center; }
+
+/* the dot lights up when the line reaches it */
+.journey__dot {
+  position: relative;
+  z-index: 1;
+  width: var(--dot);
+  height: var(--dot);
+  margin-top: 26px;
+  border-radius: 50%;
+  background: var(--page-bg);
+  border: 2px solid var(--c-periwinkle);
+  transition: background 0.4s, border-color 0.4s, box-shadow 0.4s, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.journey__step.is-passed .journey__dot {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 6px rgba(76, 98, 245, 0.16);
+  transform: scale(1.12);
+}
+
+.journey__step.is-now.is-passed .journey__dot {
+  animation: now-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes now-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(76, 98, 245, 0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(76, 98, 245, 0); }
+}
+
+/* tag on the left, dates on the right, across the top of each card */
+.journey__card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-bottom: 12px;
+}
+
+.journey__when {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--page-text-soft);
+}
+.journey__step.is-now .journey__when { color: var(--accent); }
+
+/* ---------- card ---------- */
+.journey__card {
+  padding: 22px 24px 22px;
+  border-radius: var(--radius-card);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+}
+
+.journey__kind {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: var(--c-cloud);
+  color: var(--page-text);
+}
+.kind-education .journey__kind { background: var(--c-periwinkle); color: var(--page-text); }
+.kind-work .journey__kind { background: var(--accent); color: #fff; }
+.kind-research .journey__kind { background: var(--c-lavender); color: var(--page-text); }
+.kind-now .journey__kind { background: transparent; color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+
+.journey__title {
+  margin: 0 0 4px;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+  color: var(--page-text);
+}
+
+.journey__org {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.journey__place {
+  font-weight: 400;
+  color: var(--page-text-soft);
+}
+
+.journey__note {
+  margin: 6px 0 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--page-text-soft);
+}
+
+.journey__points {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.journey__points li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--page-text-body);
+}
+
+/* tiny sparkle bullets */
+.journey__points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 9px;
+  height: 9px;
+  background: var(--c-blueberry);
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+}
+
+.journey__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.journey__tags li {
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--card-border);
+  background: var(--c-cloud);
+  font-size: 12.5px;
+  color: var(--page-text);
+}
+
+/* ---------- entry: cards slide in from their side ---------- */
+.journey__card {
+  opacity: 0;
+  filter: blur(6px);
+  transition: opacity 0.8s ease, transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.8s ease;
+}
+.journey__step.is-left .journey__card { transform: translateX(-48px); }
+.journey__step.is-right .journey__card { transform: translateX(48px); }
+
+.journey__step.is-in .journey__card {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* ---------- phones and narrow tablets: one column, line on the left ---------- */
+@media (max-width: 760px) {
+  .journey__track { --gutter: 40px; }
+  .journey__head { text-align: left; }
+  .journey__line { left: calc(var(--gutter) / 2); }
+
+  .journey__step,
+  .journey__step.is-right {
+    grid-template-columns: var(--gutter) minmax(0, 1fr);
+    grid-template-areas: "dot card";
+  }
+
+  .journey__step + .journey__step { margin-top: 0; }
+  .journey__dot { margin-top: 22px; }
+
+  .journey__step.is-left .journey__card,
+  .journey__step.is-right .journey__card { transform: translateY(24px); }
+
+  .journey__card { padding: 18px 18px; }
+  .journey__title { font-size: 17px; }
+}

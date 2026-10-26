@@ -1,0 +1,61 @@
+/* The pages sit on top of each other; only the open one (and the one sliding away) is visible. */
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+.pager {
+  --page-duration: 1s;
+  --page-ease: cubic-bezier(0.76, 0, 0.24, 1);
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--page-bg);
+}
+
+.page {
+  position: absolute;
+  inset: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--page-bg);
+  visibility: hidden;
+  outline: none;
+}
+
+.page.is-current,
+.page.is-leaving { visibility: visible; }
+
+.page.is-current { z-index: 2; }
+.page.is-leaving { z-index: 1; }
+
+/* the new page slides in over the old one, like a card... */
+.page.is-entering { animation: page-in var(--page-duration) var(--page-ease) both; }
+.pager[data-dir="up"] .page.is-entering { animation-name: page-in-from-top; }
+
+/* ...while the old one sinks back and dims */
+.page.is-leaving { animation: page-out var(--page-duration) var(--page-ease) both; }
+.pager[data-dir="up"] .page.is-leaving { animation-name: page-out-down; }
+
+@keyframes page-in {
+  from { transform: translateY(100%); border-radius: var(--radius-stage) var(--radius-stage) 0 0; }
+  to { transform: none; border-radius: 0; }
+}
+@keyframes page-in-from-top {
+  from { transform: translateY(-100%); border-radius: 0 0 var(--radius-stage) var(--radius-stage); }
+  to { transform: none; border-radius: 0; }
+}
+@keyframes page-out {
+  to { transform: translateY(-12%) scale(0.95); opacity: 0.3; }
+}
+@keyframes page-out-down {
+  to { transform: translateY(12%) scale(0.95); opacity: 0.3; }
+}
+
+/* content on a page that just slid in waits for the slide to mostly land before rising */
+.page.is-entering .rise {
+  animation-delay: calc(var(--d, 0s) + 0.45s);
+}
