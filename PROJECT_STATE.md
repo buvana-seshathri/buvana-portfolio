@@ -40,25 +40,37 @@ Design notes live in Notion: https://app.notion.com/p/portfolio-design-notes-403
    resize to fit any count. A band reading "buvana seshathri ✦" (regular weight, unstretched) wraps the ring,
    turns at about half the cards' speed, and ripples within the card height. Adapted from the pmndrs
    "cards with border radius" example (MIT).
-5. **About** (`src/components/About/`, page `#about`, white page): the graduation photo in an arch frame
-   (320px max) with three plain flat twinkling sparkles (blueberry, periwinkle, electric). Buvana likes these
-   plain stars; keep them. Lowercase Fraunces heading "a bit about *me.*" with the blue→purple highlight.
-   Below it a post-style card that **flips over on hover** (a "fun facts ↻" button flips it on touch screens
-   and for keyboard users): front = window dots, `about-me.md`, "My name is Buvana Seshathri" in a selection
-   highlight with a blinking caret, two short paragraphs, italic "buvana ♡" signature, "Open to new roles"
-   pill; back = `fun-facts.md`, "Fun facts": On repeat: K-pop, always; Languages: speaks 3, writes 4,
-   understands 5, with chips Tamil, English, Korean, Hindi, Telugu. Both faces share one grid cell so the
-   card keeps one height. Copy in `site.about` (`card` and `facts`); photo at `src/assets/about/photo.jpg`.
-6. **Journey** (`src/components/Journey/`, page `#journey`, right after About, no nav link): "the story
-   *so far.*" + "From Chennai to Dallas, one build at a time." A vertical timeline from the Oct 23 resumes:
-   Sri Sairam B.E. CS (Aug 2019 – May 2023, GPA 9.41/10), Zoho MTS Software Engineer (Jul 2022 – Jul 2024),
-   IEEE I2CT 2023 paper, UT Dallas M.S. CS Intelligent Systems (Aug 2024 – May 2026, GPA 3.88/4.0), HPC
-   Student Assistant (Jun 2025 – May 2026), cross-modal transfer learning research (2026), Now (building
-   applied AI, Telly, open to new roles). Desktop: cards alternate sides of a center line and tuck up beside
-   each other; phones: one column, line on the left. The line draws itself down as you scroll (finishes at
-   the bottom), dots light up as it reaches them, the Now dot pulses, cards slide in from their side; it all
-   resets and replays when you come back. Each card: kind tag (Education/Work/Research/Now), dates, title,
-   org · place, optional note, sparkle bullets, tool chips. Content in `site.journey.steps`.
+5. **About** (`src/components/About/`, page `#about`). Layout: heading "a bit about *me.*" on top, ON ONE LINE (never break "me." onto a second line), then
+   **plush doll | intro card | photo side by side with their bottoms on one shared line**: the doll and card
+   are `--h` tall (clamp(320px, 44vh, 400px)), the photo a little bigger (1.18 × `--h`, spanning up beside the heading), and a "the story so far ↓" pill under the card (links to #journey).
+   Tablets and phones (≤1100px): heading, then doll + photo side by side, then the card.
+   - **Background:** only soft drifting color blobs (periwinkle, lavender, a little blush pink) and a faint
+     dotted paper texture. No floating shapes across the background.
+   - **Little sparkles, hearts and dots** cluster around the doll and the photo only (`DOLL_BITS`, `PHOTO_BITS`
+     in About.jsx), plus the three plain twinkling sparkles on the photo (keep them).
+   - **Plush doll** (`src/assets/about/plush.webp`, cut out from Buvana's photo of the doll holding a diploma):
+     **sits** on the line, never hovers: the contact shadow is tucked under her gown and feet (her body meets
+     the ground across the bottom ~8% of the image, higher than her lowest foot), not below the image; gentle "breathing" squish from
+     her base, small lean toward the cursor, a little wiggle and "hi!" bubble on hover, hops with three hearts on
+     click and sits back down (a real button).
+   - **Intro card:** window dots + `about-me.md`, "My name is Buvana Seshathri" with blinking caret, two
+     paragraphs, "buvana ♡", "Open to new roles"; content centered vertically in the matched height.
+   - **Photo:** arch, **no white border**, unveils bottom-up, leans toward the cursor, zooms on hover.
+   Copy in `site.about` (card, next, plush); cursor values are `--px/--py` (typed with @property).
+6. **Journey** (`src/components/Journey/`, page `#journey`, right after About, no nav link). Fits one screen.
+   Left: "the story *so far.*" (one line) + "From Chennai to Dallas, one build at a time." and a compact
+   vertical timeline: each step is just date | what happened | where (no bullet points, tags or GPAs):
+   2019–2023 B.E. CS, Sri Sairam · 2022–2024 Software Engineer, Zoho · 2023 Published at IEEE I2CT ·
+   2024–2026 M.S. CS, UT Dallas · 2025–2026 HPC Student Assistant, UT Dallas · 2026 cross-modal transfer
+   learning research, Perceptive Mobile AI Lab · Now: building applied AI, open to new roles.
+   When the page opens the line draws down, each dot lights up as it's reached (the Now dot pulses), and the
+   steps rise in one after another. Right: the standing plush doll (`src/assets/journey-plush.webp`, winking,
+   diploma + bouquet) on a contact shadow under her feet, with a few sparkles/hearts around her; same
+   hi/hop behavior as About. Same soft pastel background as About. Phones/tablets (≤900px): doll on top.
+   Content in `site.journey` (steps, plush).
+7. **Shared pieces:** `components/Plush/` (the doll: breathe, lean, "hi!" bubble, hop + hearts; plus `Floaty`
+   sparkles/hearts/dots, `Sparkle`, `Heart`), `hooks/usePointerVars.js` (sets --px/--py from the mouse),
+   and `.soft-bg` in `styles/global.css` (drifting pastel blobs + dotted paper texture).
 
 ## Palette (modern minimal)
 Cloud #F0F4FF · Periwinkle #C6D5FF · Blueberry #819BFF · Electric blue #4C62F5 · Indigo #302C83.
@@ -70,13 +82,21 @@ Fonts: Fraunces (display), Instrument Sans (body), JetBrains Mono (labels).
 - `src/assets/carousel/1.jpg` ... `8.jpg`: placeholder photos (numbered blue/purple gradients, 1200×900).
   Buvana will drop her own in. If they're missing when rebuilding, regenerate simple numbered gradients.
 - `src/assets/about/photo.jpg`: the graduation photo (1100×1956 jpg).
+- `src/assets/about/plush.webp`: cut-out (transparent background) of the sitting plush doll, made with rembg
+  (isnet-general-use) from Buvana's photo.
+- `src/assets/journey-plush.webp`: cut-out of the standing doll with the bouquet (rembg for her body plus a
+  color key against the plain blue backdrop for the bouquet, which the model kept erasing). (The keepsake tin photo was removed from the site.)
 - `package-lock.json`: run `npm install` to regenerate.
 
 ## Decisions the user rejected (don't bring back)
 Glass/transmission letters in the loader, the Blender character, floating "b" letter swarm, liquid glass blobs,
 bright saturated blue stages, bold or stretched band text, links on carousel cards.
 One continuous scrolling page (sections must feel like separate pages that slide in).
-About: extra decorations around the photo: CSS frosted-glass stars and glass bubbles, and 3D wobbly glossy stars
+Journey: a long scrolling timeline with bullet points, tool tags and GPAs on every step.
+About: a big plush doll that looks like it floats (she must sit), a white border on the photo, stars/hearts/dots
+floating across the whole background (keep them near the doll and photo only), the keepsake tin on the page (tilted in 3D, then flat and full-height running off the edge),
+the photo as a big full-height arch, a flip card (first with a "fun facts" back, then the tin photo on the back), a cursor-reactive background
+(color blobs, lit dot grid, sliding outlined words), a "little tin of me" caption, extra decorations around the photo: CSS frosted-glass stars and glass bubbles, and 3D wobbly glossy stars
 (pmndrs wobbling-sphere material), "Off the clock" pills/hobbies in the card, a 2×2 facts grid listing experience (replaced by the timeline), a long page (dark "right now" bento + closing CTA), a full collage on a dark stage with a huge
 headline across the photo, bracket tags over the photo, the spinning circular text badge, a "02 — about"
 section label.

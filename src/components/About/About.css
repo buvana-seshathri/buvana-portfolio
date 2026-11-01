@@ -1,76 +1,64 @@
-/* About page: the photo with its sparkles, then the heading and a card that flips over to show fun facts. */
+/* About page: the heading on top, then the plush doll, the intro card and a small photo side by side,
+   all the same height (--h) and sitting on one shared line, over soft pastel color. A few sparkles, hearts
+   and dots cluster around the doll and the photo. The doll and photo lean gently toward the cursor. */
+
 .about {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   min-height: 100%;
   display: flex;
   align-items: center;
-  padding-block: calc(88px + env(safe-area-inset-top, 0px)) calc(48px + env(safe-area-inset-bottom, 0px));
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: calc(88px + env(safe-area-inset-top, 0px)) calc(40px + env(safe-area-inset-bottom, 0px));
+  padding-left: max(24px, env(safe-area-inset-left, 0px));
+  padding-right: max(24px, env(safe-area-inset-right, 0px));
+  transition: --px 0.9s cubic-bezier(0.2, 0.8, 0.2, 1), --py 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+/* the soft pastel background is .soft-bg in styles/global.css */
+
+/* ---------- layout ----------
+       .      heading   .
+     plush     card   photo     <- same height, bottoms on one line
+       .      next      .                                              */
 .about__wrap {
-  width: 100%;
-  max-width: 1080px;
-  margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(40px, 7vw, 96px);
-}
-
-/* ---------- photo ---------- */
-.about__media {
+  --h: clamp(320px, 44vh, 400px);
   position: relative;
-  flex: 0 1 320px;
-  width: min(100%, 320px);
-}
-
-.about__photo {
-  aspect-ratio: 11 / 15;
-  /* arch: a half-circle top (50% of the width across, 36.67% of the 11:15 height down) */
-  border-radius: 50% 50% var(--radius-stage) var(--radius-stage) / 36.67% 36.67% var(--radius-stage) var(--radius-stage);
-  overflow: hidden;
-  background: var(--stage-indigo);
-  box-shadow: 0 50px 90px -50px rgba(5, 5, 7, 0.55);
-}
-
-.about__photo img {
-  display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 52%;
+  max-width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto minmax(380px, 560px) auto;
+  grid-template-areas:
+    ".     heading photo"
+    "plush card    photo"
+    ".     next    .    ";
+  justify-content: center;
+  align-items: end;
+  column-gap: clamp(36px, 4vw, 64px);
+  row-gap: clamp(20px, 3vh, 28px);
 }
 
-/* ---------- sparkles around the photo ---------- */
-.about__sparkle {
-  position: absolute;
-  animation: twinkle 4s ease-in-out infinite;
-}
-.about__sparkle--a { width: 34px; left: -26px; top: 15%; color: var(--c-blueberry); }
-.about__sparkle--b { width: 18px; left: 6px; top: 7%; color: var(--c-periwinkle); animation-delay: -1.4s; }
-.about__sparkle--c { width: 26px; right: -18px; bottom: 6%; color: var(--accent); animation-delay: -2.4s; }
-
-@keyframes twinkle {
-  0%, 100% { transform: scale(1) rotate(0deg); }
-  50% { transform: scale(0.78) rotate(18deg); }
+/* ---------- plush doll (styles shared in components/Plush) ---------- */
+.about__plush-spot {
+  grid-area: plush;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
 
-/* ---------- copy ---------- */
-.about__copy {
-  flex: 1 1 480px;
-  min-width: 0;
-  max-width: 600px;
-}
+.about__plush { height: var(--h); }
 
+/* ---------- heading + intro ---------- */
 .about__heading {
-  margin: 0 0 26px;
+  grid-area: heading;
+  margin: 0;
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(2.75rem, 5.4vw, 4.75rem);
-  line-height: 0.98;
-  letter-spacing: -0.04em;
+  font-size: clamp(2.75rem, min(5vw, 8.5vh), 5.25rem);
+  line-height: 1;
+  white-space: nowrap;
+  letter-spacing: -0.045em;
   font-variation-settings: "opsz" 144, "SOFT" 30;
   color: var(--page-text);
 }
@@ -83,25 +71,19 @@
   background: var(--highlight-gradient) no-repeat 0 86% / 100% 0.2em;
 }
 
-/* ---------- the flip ----------
-   both faces sit in the same grid cell, so the card is as tall as its taller face */
-.about__flip { perspective: 1600px; }
+/* the highlight under "me." sweeps in */
+.page.is-current .about__heading em { animation: highlight-in 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.75s both; }
+.page.is-entering .about__heading em { animation-delay: 1.2s; }
+html:not([data-loaded]) .about__heading em { animation-play-state: paused; }
 
-.about__flip-inner {
-  display: grid;
-  transform-style: preserve-3d;
-  transition: transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+@keyframes highlight-in {
+  from { background-size: 0% 0.2em; }
+  to { background-size: 100% 0.2em; }
 }
 
-.about__flip.is-flipped .about__flip-inner { transform: rotateY(180deg); }
-
-@media (hover: hover) {
-  .about__flip:hover .about__flip-inner { transform: rotateY(180deg); }
-}
-
-/* ---------- the card (both faces) ---------- */
 .about__card {
-  grid-area: 1 / 1;
+  grid-area: card;
+  min-height: var(--h);
   display: flex;
   flex-direction: column;
   border-radius: var(--radius-card);
@@ -109,17 +91,13 @@
   border: 1px solid var(--card-border);
   box-shadow: var(--card-shadow);
   overflow: hidden;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
 }
-
-.about__card--back { transform: rotateY(180deg); }
 
 .about__card-bar {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 9px 12px 9px 18px;
+  padding: 11px 18px;
   border-bottom: 1px solid var(--card-border);
 }
 
@@ -140,46 +118,29 @@
   color: var(--page-text-soft);
 }
 
-.about__flip-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-left: 10px;
-  padding: 6px 11px;
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius-pill);
-  background: var(--c-cloud);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
-}
-.about__flip-btn:hover {
-  background: rgba(198, 213, 255, 0.55);
-  border-color: var(--c-blueberry);
-}
-
 .about__card-body {
   flex: 1;
-  padding: 20px 22px 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 18px 26px 4px;
 }
 
 .about__card-body > p {
   margin: 0 0 12px;
-  font-size: 16px;
-  line-height: 1.62;
+  font-size: clamp(15.5px, 1.15vw, 17px);
+  line-height: 1.64;
   color: var(--page-text-body);
 }
+.about__card-body > p:last-child { margin-bottom: 0; }
 
 /* name in a text-selection highlight, with a blinking caret */
 .about__name {
   display: inline-flex;
+  align-self: flex-start;
   align-items: center;
-  margin: 0 0 12px;
-  font-size: 23px;
+  margin: 0 0 14px;
+  font-size: 24px;
   font-weight: 600;
   letter-spacing: -0.02em;
   color: var(--page-text);
@@ -211,7 +172,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 12px 22px 16px;
+  padding: 14px 26px 18px;
 }
 
 .about__signature {
@@ -246,79 +207,111 @@
   box-shadow: 0 0 0 4px rgba(76, 98, 245, 0.18);
 }
 
-/* ---------- back face: fun facts ---------- */
-.about__facts {
-  display: grid;
-  gap: 16px;
-  margin: 2px 0 0;
-}
-
-.about__fact dt {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--page-text-soft);
-}
-
-.about__fact dd {
-  margin: 6px 0 0;
-  font-size: 17px;
-  font-weight: 500;
-  color: var(--page-text);
-}
-
-.about__lang-counts,
-.about__lang-list {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.about__lang-counts { gap: 24px; margin-bottom: 12px; }
-
-.about__lang-counts li {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-}
-
-.about__lang-counts b {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 500;
-  font-size: 40px;
-  line-height: 1;
-  font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
-  color: var(--accent);
-}
-
-.about__lang-counts span {
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--page-text-soft);
-}
-
-.about__lang-list { gap: 8px; }
-
-.about__lang-list li {
-  padding: 5px 12px;
+/* link to the next page */
+.about__next {
+  grid-area: next;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
   border-radius: var(--radius-pill);
   border: 1px solid var(--card-border);
-  background: var(--c-cloud);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--page-text);
+  background: var(--card-bg);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--accent);
+  transition: background 0.2s, border-color 0.2s;
+}
+.about__next:hover { background: var(--c-cloud); border-color: var(--c-blueberry); }
+.about__next span { display: inline-block; animation: nudge-down 1.8s ease-in-out infinite; }
+
+@keyframes nudge-down {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
 }
 
-/* ---------- phones ---------- */
+/* ---------- small photo ---------- */
+.about__media { grid-area: photo; align-self: end; } /* spans the heading row too, so its extra height goes up */
+
+/* leans toward the cursor, with the sparkles floating in front */
+.about__media-tilt {
+  position: relative;
+  transform-style: preserve-3d;
+  transform: perspective(900px) rotateY(calc(var(--px) * 7deg)) rotateX(calc(var(--py) * -5deg));
+}
+
+.about__photo {
+  height: calc(var(--h) * 1.18); /* a little taller than the doll and the card, bottoms still on one line */
+  aspect-ratio: 11 / 15;
+  /* arch: a half-circle top (50% of the width across, 36.67% of the 11:15 height down) */
+  border-radius: 50% 50% var(--radius-stage) var(--radius-stage) / 36.67% 36.67% var(--radius-stage) var(--radius-stage);
+  overflow: hidden;
+  background: var(--stage-indigo);
+  box-shadow: 0 40px 70px -40px rgba(5, 5, 7, 0.5);
+}
+
+.about__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 45%;
+  transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.about__media-tilt:hover .about__photo img { transform: scale(1.05); }
+
+/* the photo unveils itself from the bottom up each time the page opens */
+.page.is-current .about__photo img { animation: photo-in 1.3s cubic-bezier(0.2, 0.8, 0.2, 1) 0.35s both; }
+.page.is-entering .about__photo img { animation-delay: 0.8s; }
+html:not([data-loaded]) .about__photo img { animation-play-state: paused; }
+
+@keyframes photo-in {
+  from { clip-path: inset(100% 0 0 0); scale: 1.18; }
+  to { clip-path: inset(0 0 0 0); scale: 1; }
+}
+
+.about__sparkle {
+  position: absolute;
+  transform: translateZ(40px);
+  animation: twinkle 4s ease-in-out infinite;
+}
+.about__sparkle--a { width: 30px; left: -24px; top: 14%; color: var(--c-blueberry); }
+.about__sparkle--b { width: 16px; left: 6px; top: 5%; color: var(--c-periwinkle); animation-delay: -1.4s; }
+.about__sparkle--c { width: 24px; right: -18px; bottom: 8%; color: var(--accent); animation-delay: -2.4s; }
+
+@keyframes twinkle {
+  0%, 100% { transform: translateZ(40px) scale(1) rotate(0deg); }
+  50% { transform: translateZ(40px) scale(0.78) rotate(18deg); }
+}
+
+/* ---------- narrower screens: heading, then doll + photo side by side, then the intro ---------- */
+@media (max-width: 1100px) {
+  .about__wrap {
+    --h: clamp(210px, 30vh, 300px);
+    max-width: 620px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "heading heading"
+      "plush   photo"
+      "card    card"
+      "next    next";
+    row-gap: 28px;
+    column-gap: 16px;
+  }
+  .about__media { justify-self: center; }
+  .about__card { min-height: 0; }
+  .about__plush .plush__bubble { left: 50%; top: -8%; font-size: 18px; }
+}
+
 @media (max-width: 560px) {
-  .about__media { flex-basis: 250px; width: min(100%, 250px); }
+  .about__wrap { --h: min(54vw, 230px); }
+  .about__heading { font-size: clamp(2.4rem, 12.5vw, 4rem); }
   .about__card-body { padding: 18px 18px 4px; }
   .about__card-foot { padding: 12px 18px 16px; }
   .about__name { font-size: 20px; }
-  .about__card-file { display: none; }
-  .about__flip-btn { margin-left: auto; }
 }

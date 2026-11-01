@@ -1,30 +1,41 @@
-/* Journey page: a vertical timeline, cards alternating either side of a line that draws itself as you scroll.
-   On phones it becomes one column with the line on the left. */
+/* Journey page: heading + a compact vertical timeline on the left, the standing plush doll on the right,
+   over the same soft pastel background as About (.soft-bg in styles/global.css).
+   When the page opens: the line draws down, each dot lights up as it's reached, the steps rise in. */
 .journey {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   min-height: 100%;
-  padding-block: calc(96px + env(safe-area-inset-top, 0px)) calc(120px + env(safe-area-inset-bottom, 0px));
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex;
+  align-items: center;
+  padding-block: calc(88px + env(safe-area-inset-top, 0px)) calc(40px + env(safe-area-inset-bottom, 0px));
+  padding-left: max(24px, env(safe-area-inset-left, 0px));
+  padding-right: max(24px, env(safe-area-inset-right, 0px));
+  transition: --px 0.9s cubic-bezier(0.2, 0.8, 0.2, 1), --py 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .journey__wrap {
-  max-width: 1080px;
+  width: 100%;
+  max-width: 1160px;
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  grid-template-areas: "main plush";
+  align-items: center;
+  column-gap: clamp(40px, 6vw, 96px);
 }
+
+.journey__main { grid-area: main; min-width: 0; }
 
 /* ---------- heading ---------- */
-.journey__head {
-  margin-bottom: clamp(48px, 7vw, 80px);
-  text-align: center;
-}
-
 .journey__heading {
-  margin: 0 0 14px;
+  margin: 0 0 10px;
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(2.75rem, 5.4vw, 4.75rem);
-  line-height: 0.98;
-  letter-spacing: -0.04em;
+  font-size: clamp(2.75rem, min(5vw, 8.5vh), 5.25rem);
+  line-height: 1;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
   font-variation-settings: "opsz" 144, "SOFT" 30;
   color: var(--page-text);
 }
@@ -38,260 +49,149 @@
 }
 
 .journey__lede {
-  margin: 0;
+  margin: 0 0 clamp(24px, 4.5vh, 44px);
   font-size: 17px;
   color: var(--page-text-soft);
 }
 
-/* ---------- the line ---------- */
-.journey__track {
-  --progress: 0;
-  --dot: 18px;
-  --gutter: 64px; /* the middle column the line and dots live in */
-  position: relative;
-}
-
-.journey__line {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 2px;
-  margin-left: -1px;
-  border-radius: 2px;
-  background: var(--page-line);
-}
-
-.journey__fill {
-  position: absolute;
-  inset: 0 0 auto;
-  height: calc(var(--progress) * 100%);
-  border-radius: 2px;
-  background: linear-gradient(180deg in oklab, var(--c-periwinkle), var(--c-blueberry) 35%, var(--accent) 70%, var(--stage-purple));
-}
-
-/* a soft glowing tip that leads the line */
-.journey__fill::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: -5px;
-  width: 10px;
-  height: 10px;
-  margin-left: -5px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 5px rgba(76, 98, 245, 0.18), 0 0 18px 4px rgba(109, 74, 224, 0.45);
-  opacity: min(1, calc(var(--progress) * 40));
-}
-
-/* ---------- steps ---------- */
+/* ---------- the timeline ---------- */
 .journey__steps {
+  --dot: 14px;
+  --rail: 8px; /* the line's distance from the left edge */
   position: relative;
   display: grid;
-  gap: clamp(28px, 4vw, 44px);
+  gap: clamp(12px, 2.2vh, 22px);
   margin: 0;
-  padding: 0;
+  padding: 0 0 0 36px;
   list-style: none;
 }
 
-.journey__step {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) var(--gutter) minmax(0, 1fr);
-  grid-template-areas: "card dot .";
-  align-items: start;
+/* the track, and the colored line that draws down it */
+.journey__steps::before,
+.journey__steps::after {
+  content: "";
+  position: absolute;
+  left: var(--rail);
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  border-radius: 2px;
 }
-.journey__step.is-right { grid-template-areas: ". dot card"; }
+.journey__steps::before { background: var(--page-line); }
+.journey__steps::after {
+  background: linear-gradient(180deg in oklab, var(--c-periwinkle), var(--c-blueberry) 40%, var(--accent) 75%, var(--stage-purple));
+  transform-origin: top;
+  transform: scaleY(0);
+}
 
-/* cards sit on alternate sides, so each one can tuck up beside the one before it */
-.journey__step + .journey__step { margin-top: -96px; }
+.page.is-current .journey__steps::after {
+  animation: line-draw calc(var(--count) * 0.2s + 0.2s) cubic-bezier(0.45, 0, 0.25, 1) 0.4s both;
+}
+.page.is-entering .journey__steps::after { animation-delay: 0.85s; }
+html:not([data-loaded]) .journey__steps::after { animation-play-state: paused; }
 
-.journey__card { grid-area: card; }
-.journey__dot { grid-area: dot; justify-self: center; }
+@keyframes line-draw {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
 
-/* the dot lights up when the line reaches it */
-.journey__dot {
+/* each step: date | what happened */
+.journey__step {
   position: relative;
-  z-index: 1;
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: 20px;
+}
+
+/* the dot lights up as the line reaches it */
+.journey__dot {
+  position: absolute;
+  z-index: 1; /* in front of the line */
+  left: calc(var(--rail) - 36px + 1px - var(--dot) / 2);
+  top: 0.32em;
   width: var(--dot);
   height: var(--dot);
-  margin-top: 26px;
   border-radius: 50%;
   background: var(--page-bg);
   border: 2px solid var(--c-periwinkle);
-  transition: background 0.4s, border-color 0.4s, box-shadow 0.4s, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-sizing: border-box;
 }
 
-.journey__step.is-passed .journey__dot {
-  background: var(--accent);
-  border-color: var(--accent);
-  box-shadow: 0 0 0 6px rgba(76, 98, 245, 0.16);
-  transform: scale(1.12);
+.page.is-current .journey__dot {
+  animation: dot-on 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) calc(0.45s + var(--i) * 0.2s) both;
 }
+.page.is-entering .journey__dot { animation-delay: calc(0.9s + var(--i) * 0.2s); }
 
-.journey__step.is-now.is-passed .journey__dot {
-  animation: now-pulse 2.4s ease-in-out infinite;
+.page.is-current .journey__step.is-now .journey__dot {
+  animation:
+    dot-on 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) calc(0.45s + var(--i) * 0.2s) both,
+    now-pulse 2.4s ease-in-out calc(1s + var(--i) * 0.2s) infinite;
+}
+html:not([data-loaded]) .journey__dot { animation-play-state: paused !important; }
+
+@keyframes dot-on {
+  from { background: var(--page-bg); border-color: var(--c-periwinkle); transform: scale(0.6); }
+  to { background: var(--accent); border-color: var(--accent); transform: scale(1); }
 }
 
 @keyframes now-pulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(76, 98, 245, 0.4); }
-  50% { box-shadow: 0 0 0 12px rgba(76, 98, 245, 0); }
-}
-
-/* tag on the left, dates on the right, across the top of each card */
-.journey__card-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px 16px;
-  margin-bottom: 12px;
+  50% { box-shadow: 0 0 0 9px rgba(76, 98, 245, 0); }
 }
 
 .journey__when {
   margin: 0;
   font-family: var(--font-mono);
   font-size: 11px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
+  white-space: nowrap;
   color: var(--page-text-soft);
 }
 .journey__step.is-now .journey__when { color: var(--accent); }
 
-/* ---------- card ---------- */
-.journey__card {
-  padding: 22px 24px 22px;
-  border-radius: var(--radius-card);
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  box-shadow: var(--card-shadow);
-}
-
-.journey__kind {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: var(--radius-pill);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  background: var(--c-cloud);
-  color: var(--page-text);
-}
-.kind-education .journey__kind { background: var(--c-periwinkle); color: var(--page-text); }
-.kind-work .journey__kind { background: var(--accent); color: #fff; }
-.kind-research .journey__kind { background: var(--c-lavender); color: var(--page-text); }
-.kind-now .journey__kind { background: transparent; color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
-
 .journey__title {
-  margin: 0 0 4px;
-  font-size: 19px;
+  margin: 0;
+  font-size: clamp(16px, 1.25vw, 18px);
   font-weight: 600;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.01em;
   line-height: 1.3;
   color: var(--page-text);
 }
 
 .journey__org {
-  margin: 0;
-  font-size: 15px;
-  font-weight: 500;
+  margin: 2px 0 0;
+  font-size: 14px;
+  line-height: 1.4;
   color: var(--accent);
 }
 
-.journey__place {
-  font-weight: 400;
-  color: var(--page-text-soft);
-}
-
-.journey__note {
-  margin: 6px 0 0;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--page-text-soft);
-}
-
-.journey__points {
-  display: grid;
-  gap: 8px;
-  margin: 14px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.journey__points li {
-  position: relative;
-  padding-left: 18px;
-  font-size: 14.5px;
-  line-height: 1.55;
-  color: var(--page-text-body);
-}
-
-/* tiny sparkle bullets */
-.journey__points li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.5em;
-  width: 9px;
-  height: 9px;
-  background: var(--c-blueberry);
-  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
-}
-
-.journey__tags {
+/* ---------- plush doll (styles shared in components/Plush) ---------- */
+.journey__plush-spot {
+  grid-area: plush;
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 16px 0 0;
-  padding: 0;
-  list-style: none;
+  justify-content: center;
+  align-items: flex-end;
 }
 
-.journey__tags li {
-  padding: 4px 10px;
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--card-border);
-  background: var(--c-cloud);
-  font-size: 12.5px;
-  color: var(--page-text);
-}
+.journey__plush { height: clamp(300px, 64vh, 600px); }
 
-/* ---------- entry: cards slide in from their side ---------- */
-.journey__card {
-  opacity: 0;
-  filter: blur(6px);
-  transition: opacity 0.8s ease, transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.8s ease;
-}
-.journey__step.is-left .journey__card { transform: translateX(-48px); }
-.journey__step.is-right .journey__card { transform: translateX(48px); }
-
-.journey__step.is-in .journey__card {
-  opacity: 1;
-  transform: none;
-  filter: none;
-}
-
-/* ---------- phones and narrow tablets: one column, line on the left ---------- */
-@media (max-width: 760px) {
-  .journey__track { --gutter: 40px; }
-  .journey__head { text-align: left; }
-  .journey__line { left: calc(var(--gutter) / 2); }
-
-  .journey__step,
-  .journey__step.is-right {
-    grid-template-columns: var(--gutter) minmax(0, 1fr);
-    grid-template-areas: "dot card";
+/* ---------- narrower screens: doll on top, timeline below ---------- */
+@media (max-width: 900px) {
+  .journey__wrap {
+    max-width: 620px;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "plush"
+      "main";
+    row-gap: 28px;
   }
+  .journey__plush { height: clamp(220px, 32vh, 300px); }
+}
 
-  .journey__step + .journey__step { margin-top: 0; }
-  .journey__dot { margin-top: 22px; }
-
-  .journey__step.is-left .journey__card,
-  .journey__step.is-right .journey__card { transform: translateY(24px); }
-
-  .journey__card { padding: 18px 18px; }
-  .journey__title { font-size: 17px; }
+@media (max-width: 560px) {
+  .journey__heading { font-size: clamp(2.4rem, 12vw, 4rem); }
+  .journey__step { grid-template-columns: minmax(0, 1fr); row-gap: 4px; }
+  .journey__dot { top: 0.1em; }
 }

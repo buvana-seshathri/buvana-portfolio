@@ -39,103 +39,26 @@ export const site = {
       signature: 'buvana',
       status: 'Open to new roles',
     },
-    // the back of the card, shown when it flips (hover, or the flip button on touch screens)
-    facts: {
-      file: 'fun-facts.md',
-      title: 'Fun facts',
-      items: [{ label: 'On repeat', text: 'K-pop, always.' }],
-      languages: {
-        label: 'Languages',
-        counts: [
-          { n: 3, label: 'speak' },
-          { n: 4, label: 'write' },
-          { n: 5, label: 'understand' },
-        ],
-        list: ['Tamil', 'English', 'Korean', 'Hindi', 'Telugu'],
-      },
-    },
+    // link at the bottom to the next page
+    next: 'the story so far',
+    // the plush doll on the left (src/assets/about/plush.webp); hover and she says hi, click and she hops
+    plush: { alt: 'A plush doll of Buvana in a graduation cap and gown, holding a diploma', hello: 'hi!' },
   },
-  // The Journey page: the full timeline, oldest first. `kind` sets the tag color
-  // (Education, Work, Research, Now). `points` and `tags` are optional.
+
+  // The Journey page: a compact timeline (just what happened), oldest first; `now: true` marks the live dot.
   journey: {
     heading: { before: 'the story ', emphasis: 'so far.' },
     lede: 'From Chennai to Dallas, one build at a time.',
     steps: [
-      {
-        kind: 'Education',
-        when: 'Aug 2019 – May 2023',
-        title: 'B.E. Computer Science',
-        org: 'Sri Sairam Engineering College',
-        place: 'Chennai, India',
-        note: 'GPA 9.41 / 10',
-        points: [
-          'Coursework in Distributed Systems, Software Engineering, Database Design, Big Data Analytics and Machine Learning.',
-        ],
-      },
-      {
-        kind: 'Work',
-        when: 'Jul 2022 – Jul 2024',
-        title: 'Member of Technical Staff, Software Engineer',
-        org: 'Zoho Corporation',
-        place: 'Chennai, India',
-        points: [
-          'Rebuilt the customer-facing Errorlog module end to end on a REST API model (new tables, APIs and a filterable UI), taking page loads from 5–10 minutes to 200 ms.',
-          'Sole DRI for SSL/TLS certificate infrastructure, JRE upgrades and the Errorlog module on ServiceDesk Plus, Zoho’s flagship ITSM product.',
-          'Led root-cause analysis of critical production issues, including an outage where a 1M+ row table exhausted the connection pool.',
-          'Resolved 50+ high-priority customer incidents on call, closing 90%+ within SLA.',
-        ],
-        tags: ['Java', 'JavaScript', 'SQL', 'REST APIs', 'Redis', 'Tomcat'],
-      },
-      {
-        kind: 'Research',
-        when: '2023',
-        title: 'Published at IEEE I2CT 2023',
-        org: 'Comparison of VGG-19 and ResNet-50 Algorithms in Brain Tumor Detection',
-        tags: ['VGG-19', 'ResNet-50'],
-      },
-      {
-        kind: 'Education',
-        when: 'Aug 2024 – May 2026',
-        title: 'M.S. Computer Science, Intelligent Systems',
-        org: 'The University of Texas at Dallas',
-        place: 'Dallas, TX',
-        note: 'GPA 3.88 / 4.0',
-        points: [
-          'Coursework in Machine Learning, Natural Language Processing, Artificial Intelligence and Computer Vision.',
-        ],
-      },
-      {
-        kind: 'Work',
-        when: 'Jun 2025 – May 2026',
-        title: 'HPC Student Assistant, HPC Facilitation',
-        org: 'The University of Texas at Dallas',
-        place: 'Dallas, TX',
-        points: [
-          'Built a Python CLI with a prompt-based interface that lets a non-technical research team run 10+ Stable Diffusion models on HPC clusters without writing SLURM job scripts.',
-          'Supported 500+ researchers across 15 departments as the primary HPC contact for Linux, access and SLURM scheduling.',
-          'Wrote documentation and reusable setup workflows for the cluster, cutting researcher onboarding time by 50%.',
-        ],
-        tags: ['Python', 'Bash', 'Linux', 'SLURM', 'CUDA', 'PyTorch', 'Hugging Face'],
-      },
-      {
-        kind: 'Research',
-        when: '2026',
-        title: 'Cross-modal transfer learning',
-        org: 'Perceptive Mobile AI and Mobile Computing Lab, UT Dallas',
-        points: [
-          'Transferring gesture recognition learned on Wi-Fi signals to GNSS satellite signals, studying how it generalizes across sensing modalities.',
-        ],
-      },
-      {
-        kind: 'Now',
-        when: 'Now',
-        title: 'Building applied AI',
-        org: 'Open to new roles',
-        points: [
-          'Shipping AI products people can actually use, like Telly, my published Chrome extension for explained recommendations.',
-        ],
-        now: true,
-      },
+      { when: '2019 – 2023', title: 'B.E. Computer Science', org: 'Sri Sairam Engineering College' },
+      { when: '2022 – 2024', title: 'Software Engineer', org: 'Zoho Corporation' },
+      { when: '2023', title: 'Published at IEEE I2CT', org: 'Brain tumor detection research' },
+      { when: '2024 – 2026', title: 'M.S. Computer Science', org: 'The University of Texas at Dallas' },
+      { when: '2025 – 2026', title: 'HPC Student Assistant', org: 'UT Dallas' },
+      { when: '2026', title: 'Cross-modal transfer learning research', org: 'Perceptive Mobile AI Lab, UT Dallas' },
+      { when: 'Now', title: 'Building applied AI', org: 'Open to new roles', now: true },
     ],
+    // the standing plush doll on the right (src/assets/journey-plush.webp)
+    plush: { alt: 'A plush doll of Buvana in a graduation cap and gown, winking, holding a diploma and a bouquet', hello: 'hi!' },
   },
 };

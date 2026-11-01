@@ -1,0 +1,165 @@
+/* The plush doll (shared by About and Journey): sits or stands on a contact shadow, breathes gently, leans
+   toward the cursor (--px from the page), wiggles and says hi on hover, hops with hearts on click.
+   Set its height where it's used; pass the image ratio and where the shadow goes as CSS variables
+   (--ratio, --shadow-l/-r/-b/-h). Also the little floating sparkles, hearts and dots (.floaty). */
+
+/* little sparkles, hearts and dots placed around the dolls and photos */
+.floaty {
+  position: absolute;
+  z-index: 2;
+  opacity: 0.9;
+  pointer-events: none;
+  animation: floaty 10s ease-in-out infinite;
+}
+.floaty.is-dot { border-radius: 50%; background: currentColor; }
+.floaty.tone-0 { color: var(--c-periwinkle); }
+.floaty.tone-1 { color: var(--c-blueberry); }
+.floaty.tone-2 { color: #C9B8F5; } /* lilac */
+.floaty.tone-3 { color: #F4B8D4; } /* blush */
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+  33% { transform: translateY(-8px) rotate(12deg) scale(1.08); }
+  66% { transform: translateY(5px) rotate(-8deg) scale(0.94); }
+}
+
+.plush {
+  position: relative;
+  aspect-ratio: var(--ratio, 325 / 552); /* set the height where it's used */
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.plush:focus-visible { outline-offset: 8px; border-radius: 24px; }
+
+.plush__anim { position: relative; display: block; height: 100%; }
+
+/* contact shadow tucked under where she touches the ground (the image covers most of it), so she sits or
+   stands on the line instead of hovering. Place it with --shadow-l/-r/-b/-h for each photo. */
+.plush__shadow {
+  position: absolute;
+  left: var(--shadow-l, 14%);
+  right: var(--shadow-r, 6%);
+  bottom: var(--shadow-b, -1.5%);
+  height: var(--shadow-h, 11%);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(48, 44, 131, 0.5), rgba(48, 44, 131, 0.18) 65%, transparent);
+}
+
+/* leans a little toward the cursor, pivoting at her base */
+.plush__lean {
+  display: block;
+  height: 100%;
+  transform-origin: 50% 100%;
+  transform: perspective(900px) rotateY(calc(var(--px) * 8deg));
+}
+
+.plush__jump {
+  display: block;
+  height: 100%;
+  transform-origin: 50% 100%;
+  transition: transform 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+/* hover: a little happy wiggle, staying put */
+.plush:hover .plush__jump { transform: rotate(-3deg) scale(1.02, 0.99); }
+
+/* she breathes, staying put */
+.plush img {
+  display: block;
+  height: 100%;
+  width: auto;
+  transform-origin: 50% 100%;
+  filter: drop-shadow(0 1px 1.5px rgba(48, 44, 131, 0.22));
+  animation: plush-breathe 4.5s ease-in-out infinite;
+  user-select: none;
+}
+
+@keyframes plush-breathe {
+  0%, 100% { transform: scale(1, 1); }
+  50% { transform: scale(1.012, 0.988); }
+}
+
+/* click: a happy hop with a squish */
+.plush__anim.is-hopping .plush__jump { animation: plush-hop 0.8s cubic-bezier(0.3, 0.7, 0.4, 1); }
+.plush__anim.is-hopping .plush__shadow { animation: plush-shadow 0.8s cubic-bezier(0.3, 0.7, 0.4, 1); }
+
+@keyframes plush-hop {
+  0% { transform: translateY(0) scale(1.05, 0.93); }
+  35% { transform: translateY(-11%) scale(0.96, 1.05) rotate(-5deg); }
+  62% { transform: translateY(0) scale(1.07, 0.91); }
+  80% { transform: translateY(-2.5%) scale(0.98, 1.02); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes plush-shadow {
+  35% { transform: scale(0.6); opacity: 0.45; }
+}
+
+/* "hi!" speech bubble on hover, and after a click */
+.plush__bubble {
+  position: absolute;
+  z-index: 1;
+  left: var(--bubble-l, 72%);
+  top: var(--bubble-t, 4%);
+  padding: 8px 16px 9px;
+  border-radius: 18px 18px 18px 4px;
+  background: #fff;
+  box-shadow: 0 12px 28px -12px rgba(48, 44, 131, 0.45);
+  border: 1px solid var(--card-border);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 22px;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  color: var(--accent);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(10px) scale(0.6);
+  transform-origin: 0% 100%;
+  transition: opacity 0.25s, transform 0.35s cubic-bezier(0.3, 1.6, 0.5, 1);
+  pointer-events: none;
+}
+
+.plush:hover .plush__bubble,
+.plush:focus-visible .plush__bubble {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.plush__anim.is-hopping .plush__bubble { animation: bubble-pop 1.8s ease both; }
+
+@keyframes bubble-pop {
+  0% { opacity: 0; transform: translateY(10px) scale(0.6); }
+  15%, 80% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(0) scale(1); }
+}
+
+/* hearts that float up after a click */
+.plush__hearts {
+  position: absolute;
+  left: 50%;
+  top: 14%;
+  pointer-events: none;
+}
+
+.plush__hearts svg {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  fill: currentColor;
+  stroke: none;
+  opacity: 0;
+  animation: heart-up 1.4s ease-out both;
+}
+.plush__hearts .h1 { color: var(--accent); --hx: -46px; }
+.plush__hearts .h2 { color: var(--stage-purple); --hx: 6px; width: 20px; height: 20px; animation-delay: 0.12s; }
+.plush__hearts .h3 { color: #F09CC4; --hx: 46px; width: 22px; height: 22px; animation-delay: 0.22s; }
+
+@keyframes heart-up {
+  0% { opacity: 0; transform: translate(0, 10px) scale(0.4); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--hx), -90px) scale(1) rotate(12deg); }
+}
+
