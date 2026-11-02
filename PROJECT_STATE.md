@@ -20,8 +20,9 @@ Design notes live in Notion: https://app.notion.com/p/portfolio-design-notes-403
 ## What's built
 1. **Loader** (`src/components/Loader/`): solid, glossy 3D block letters "buvana" (Fraunces soft black, wght 900,
    SOFT 100, WONK 1) that drop in, bob gently, and fill bottom-up with a smooth blue → purple → lavender gradient
-   and a wavy fill line. Near-black background with soft blue and purple glows. Fades into the page.
-   `?skipLoader` skips it; `?loaderMs=8000` slows the fill.
+   and a wavy fill line. **No shadow under the letters.** Background: **solid deep indigo with a very soft
+   gradient** (#0D0B24 → #17133F), nothing else (she tried and dropped glows and a glassmorphism backdrop).
+   Fades into the page. `?skipLoader` skips it; `?loaderMs=8000` slows the fill.
 2. **Nav** (`src/components/Nav/`): centered white glass pill fixed on top of every page: name + mono uppercase
    links; the open page's link is highlighted.
 2b. **Pager** (`src/components/Pager/`): the site is a set of full-screen pages, not one long scroll. Wheel,
@@ -89,7 +90,7 @@ Fonts: Fraunces (display), Instrument Sans (body), JetBrains Mono (labels).
 - `package-lock.json`: run `npm install` to regenerate.
 
 ## Decisions the user rejected (don't bring back)
-Glass/transmission letters in the loader, the Blender character, floating "b" letter swarm, liquid glass blobs,
+Glass/transmission letters in the loader, a glassmorphism loader background (frosted panes over vivid light), a shadow under the loader letters, the Blender character, floating "b" letter swarm, liquid glass blobs,
 bright saturated blue stages, bold or stretched band text, links on carousel cards.
 One continuous scrolling page (sections must feel like separate pages that slide in).
 Journey: a long scrolling timeline with bullet points, tool tags and GPAs on every step.

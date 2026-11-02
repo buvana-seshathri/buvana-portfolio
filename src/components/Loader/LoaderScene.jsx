@@ -150,33 +150,6 @@ function Letter({ geo, x, index, progress, theme, bounds }) {
   );
 }
 
-// a soft glow under the word, like the letters float just above a surface
-function SoftShadow({ width }) {
-  const tex = useMemo(() => {
-    const c = document.createElement('canvas');
-    c.width = 256;
-    c.height = 64;
-    const g = c.getContext('2d');
-    const grad = g.createRadialGradient(128, 32, 0, 128, 32, 128);
-    grad.addColorStop(0, 'rgba(109,74,224,0.35)');
-    grad.addColorStop(1, 'rgba(109,74,224,0)');
-    g.setTransform(1, 0, 0, 0.25, 0, 24);
-    g.fillStyle = grad;
-    g.fillRect(0, -96, 256, 256);
-    return new THREE.CanvasTexture(c);
-  }, []);
-  const ref = useRef(null);
-  useFrame((state) => {
-    if (ref.current) ref.current.material.opacity = 0.75 + Math.sin(state.clock.elapsedTime * 1.5) * 0.15;
-  });
-  return (
-    <mesh ref={ref} position={[0, -0.72, -0.4]} rotation-x={-Math.PI / 2.4} scale={[width * 1.25, 1.1, 1]}>
-      <planeGeometry />
-      <meshBasicMaterial map={tex} transparent depthWrite={false} toneMapped={false} />
-    </mesh>
-  );
-}
-
 function Word({ progress }) {
   const { letters, width, minY, maxY } = useLetters();
   const bounds = useMemo(() => ({ width, minY, maxY }), [width, minY, maxY]);
@@ -198,14 +171,11 @@ function Word({ progress }) {
   });
 
   return (
-    <>
-      <group ref={root} position-y={0.1}>
-        {letters.map((l, i) => (
-          <Letter key={i} {...l} index={i} progress={progress} theme={theme} bounds={bounds} />
-        ))}
-      </group>
-      <SoftShadow width={width} />
-    </>
+    <group ref={root} position-y={0.1}>
+      {letters.map((l, i) => (
+        <Letter key={i} {...l} index={i} progress={progress} theme={theme} bounds={bounds} />
+      ))}
+    </group>
   );
 }
 

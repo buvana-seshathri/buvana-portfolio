@@ -7,7 +7,7 @@ const params = new URLSearchParams(window.location.search);
 const MIN_DURATION = Number(params.get('loaderMs')) || 4200; // ms the water takes to fill
 const HOLD = 700; // ms to admire the full letters before fading
 
-// Full-screen intro: glass letters fill with water, then fade into the page.
+// Full-screen intro: solid letters fill with a gradient on a plain, softly shaded background, then fade into the page.
 export default function Loader({ onDone }) {
   const progress = useRef(0);
   const [pct, setPct] = useState(0);
