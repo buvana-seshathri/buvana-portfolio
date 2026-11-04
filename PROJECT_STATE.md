@@ -1,6 +1,6 @@
 # Portfolio website: current code state
 
-Last updated: 2026-10-25. This is the latest code for Buvana's portfolio site. Every source file is saved
+Last updated: 2026-11-03. This is the latest code for Buvana's portfolio site. Every source file is saved
 alongside this doc under `portfolio/` with the same path it has in the repo (for example
 `portfolio/src/components/Hero/PhotoCarousel.jsx`). Rebuild the repo from those docs before making changes,
 and save files back here after each change so the project always has the latest code.
@@ -10,7 +10,8 @@ Design notes live in Notion: https://app.notion.com/p/portfolio-design-notes-403
 ## How we work
 - Build one component at a time; deliver commit-ready files.
 - After every change, rebuild the repo, run `npm run build`, and send Buvana a fresh zip of the WHOLE repo
-  (`buvana-portfolio.zip`, no node_modules/dist), not just the changed files.
+  (`buvana-portfolio.zip`, no node_modules/dist), not just the changed files. Leave her real photos out of the
+  zip (see "Not saved here") so unzipping over her repo never replaces them.
 - Stack: Vite + React 18 + React Three Fiber (three 0.169, @react-three/fiber 8, drei 9, maath).
 - Themes: only "modern-minimal" exists. Everything reads CSS variables in `src/theme/themes.css` and 3D colors
   in `src/theme/themes.js`, so new themes (planned: "groovy baby", "love letter") are one block in each file.
@@ -30,8 +31,10 @@ Design notes live in Notion: https://app.notion.com/p/portfolio-design-notes-403
    sinks back and dims). A page taller than the screen (About on phones) scrolls inside itself first; the next
    page only comes on a fresh gesture at its edge. Each page has an address: home has no hash, About is
    `/#about`, so links open a page directly (the loader still plays first). Back/forward work. Pages are listed
-   in `PAGES` in `src/App.jsx`. Content marked `.rise` (in `styles/global.css`) rises in every time its page
-   opens. The hero's 3D carousel stops rendering while another page is open.
+   in `PAGES` in `src/App.jsx` (home, about, journey, projects). Content marked `.rise` (in `styles/global.css`)
+   rises in every time its page opens. Anything with `data-pager-ignore` keeps its own wheel/swipe/keys (the
+   desktop's windows, icons, taskbar and menus use it; the bare wallpaper still flips pages). The hero's 3D
+   carousel stops rendering while another page is open.
 3. **Hero** (`src/components/Hero/`): white page with a dark rounded "stage" (near-black with blurred blue and
    purple glows). Left: mono eyebrow, white Fraunces headline "hi, i'm buvana, / i *build* worlds." with a
    blue→purple highlight under "build", two-line lede, three outline buttons. Right: PhotoCarousel.
@@ -72,12 +75,51 @@ Design notes live in Notion: https://app.notion.com/p/portfolio-design-notes-403
 7. **Shared pieces:** `components/Plush/` (the doll: breathe, lean, "hi!" bubble, hop + hearts; plus `Floaty`
    sparkles/hearts/dots, `Sparkle`, `Heart`), `hooks/usePointerVars.js` (sets --px/--py from the mouse),
    and `.soft-bg` in `styles/global.css` (drifting pastel blobs + dotted paper texture).
+8. **Projects** (`src/components/Desktop/`, page `#projects`): **a desktop OS called "buvana os"** that looks
+   like a real Windows 11 desktop in dark mode (her reference: a screenshot of her own Windows desktop). Dark
+   page, NOT the About white.
+   - **Wallpaper:** original "silk" folds (dusk silk / midnight bloom / rose hour), auto-loaded from
+     `src/assets/desktop/wallpapers/` (made by `tools/make-wallpapers.py`). The window in front tints the
+     wallpaper with its project's `accent`. Right-click → Next desktop background crossfades.
+   - **Icons** (column-major from the top-left, like Windows): Recycle Bin, Projects and Research folders
+     (kawaii faces), readme.txt, Resume.pdf shortcut (arrow badge), then one app icon per project. Click selects,
+     double-click opens (one tap on phones), drag to move (snaps to the grid), rubber-band select, F2 renames
+     new folders. All icons are original SVG in `icons.jsx` (no OS/brand logos; Start is a sparkle tile).
+   - **Windows** (`Window.jsx`): title bar with app icon + caption buttons (minimize, maximize/restore, close
+     turns red), drag by the title bar, snap to the top (maximize) / left / right half with a snap preview,
+     dragging a maximized window restores it under the cursor, resize from all edges/corners, double-click
+     title to maximize, minimize flies into its taskbar button, open/close animations, focus order.
+   - **Taskbar** (`Taskbar.jsx`): left "Open to work" widget (where Windows shows weather), centered Start +
+     Search pill + Task view + pinned apps (Projects folder + every project) with running/active indicators and
+     hover tooltips, right tray (chevron, wifi/volume/battery → quick settings, live clock/date + bell →
+     notifications and calendar). Start menu: search (Enter opens the best match), Pinned grid, Recommended,
+     user + power menu (Sleep, Shut down = back to home, Restart = spinner then a fresh desktop). Quick settings
+     really work: Night light, Focus (hides icons), Wallpaper, brightness and volume sliders.
+   - **Right-click menu** on the desktop: View (large/medium/small icons), Sort by (name/type), Refresh, New →
+     Folder (inline rename), Next desktop background, Personalize. On an icon: Open, Open live site / View code.
+   - **Apps** (`apps/apps.jsx`): File Explorer for the Projects / Research folders (command bar, address bar,
+     search, nav pane, Details or Large icons view, sortable columns, a details pane that follows hover/selection,
+     status bar), Notepad for readme.txt (editable, Ln/Col status bar), Recycle Bin (empty), and the project
+     viewer (accent-tinted hero, "Try it" sketch, About, points, Built with chips, links or "Live link coming
+     soon"). The Projects folder opens on its own the first time the page opens (not on phones), with a welcome
+     toast.
+   - **"Try it" sketches** (`apps/demos.jsx`, all labelled sample/illustration): Grindland (complete quests,
+     path lights up, buildings rise, XP/coins), ephemera (drag pieces on a board, switch moods), Telly (another
+     pick + why), SmartDesk (route sample tickets with confidence; <0.60 goes to review, Approve), Novia (five
+     agents run in turn into a digest), OpsIntel (streaming rbac/rag/mcp/audit/eval log), Pressure Phrases
+     (toggle pressure phrases into the prompt), wifi2sat (WiFi and GNSS waves per gesture).
+   - **Phones (≤760px):** windows open full screen below the nav pill, icons start below it, taskbar shows Start,
+     open apps and the clock.
+   - Content: `site.desktop` (os name, user, widget, toast, readme lines, resume link) and `site.projects`
+     (8 projects: Grindland, ephemera, Telly, SmartDesk, Novia, OpsIntel, Pressure Phrases, wifi2sat; each with
+     type, status, accent, tagline, summary, points, stack, links, demo). Only facts she stated are used.
 
 ## Palette (modern minimal)
 Cloud #F0F4FF · Periwinkle #C6D5FF · Blueberry #819BFF · Electric blue #4C62F5 · Indigo #302C83.
 Dark stage: #050507 / #0A0912 / #110F22, glows electric #3B4EE6 and purple #6D4AE0.
 Page text: indigo; body #3E3A8C; small labels #5E5B9E (passes 4.5:1).
-Fonts: Fraunces (display), Instrument Sans (body), JetBrains Mono (labels).
+Fonts: Fraunces (display), Instrument Sans (body), JetBrains Mono (labels). The desktop uses Segoe UI Variable
+where available (falls back to Instrument Sans).
 
 ## Not saved here (binary files)
 - `src/assets/carousel/1.jpg` ... `8.jpg`: placeholder photos (numbered blue/purple gradients, 1200×900).
@@ -87,6 +129,7 @@ Fonts: Fraunces (display), Instrument Sans (body), JetBrains Mono (labels).
   (isnet-general-use) from Buvana's photo.
 - `src/assets/journey-plush.webp`: cut-out of the standing doll with the bouquet (rembg for her body plus a
   color key against the plain blue backdrop for the bouquet, which the model kept erasing). (The keepsake tin photo was removed from the site.)
+- `src/assets/desktop/wallpapers/*.jpg`: regenerate with `python3 tools/make-wallpapers.py` (numpy + Pillow).
 - `package-lock.json`: run `npm install` to regenerate.
 
 ## Decisions the user rejected (don't bring back)
@@ -101,3 +144,7 @@ the photo as a big full-height arch, a flip card (first with a "fun facts" back,
 (pmndrs wobbling-sphere material), "Off the clock" pills/hobbies in the card, a 2×2 facts grid listing experience (replaced by the timeline), a long page (dark "right now" bento + closing CTA), a full collage on a dark stage with a huge
 headline across the photo, bracket tags over the photo, the spinning circular text badge, a "02 — about"
 section label.
+Projects: flat CSS-shape mockups (they must look real); a white page like About.
+Other Projects ideas still open for later: a 3D room full of objects like the pmndrs "shopping" example (hover
+changes a side explanation box), a realistic gacha machine (needs a real .glb model), Pokémon-style shiny cards in
+a straight floating line (flip on hover, full spin into full view on click).

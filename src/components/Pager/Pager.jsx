@@ -86,10 +86,13 @@ export default function Pager({ pages, onChange }) {
   useEffect(() => {
     const current = () => pageRefs.current[indexRef.current];
     const locked = () => performance.now() < lockUntil.current;
+    // a page can opt out of page-flipping inside part of itself (e.g. a desktop with its own scrolling windows)
+    const ownsGesture = (target) => target?.closest?.('[data-pager-ignore]');
     let acc = 0;
 
     const onWheel = (e) => {
       if (e.ctrlKey) return; // pinch-zoom
+      if (ownsGesture(e.target)) return;
       const now = performance.now();
       const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
       if (Math.abs(e.deltaX) > Math.abs(dy)) return;
@@ -112,6 +115,10 @@ export default function Pager({ pages, onChange }) {
 
     let start = null;
     const onTouchStart = (e) => {
+      if (ownsGesture(e.target)) {
+        start = null;
+        return;
+      }
       const t = e.touches[0];
       start = { x: t.clientX, y: t.clientY, ...edges(current()) };
     };
@@ -131,6 +138,7 @@ export default function Pager({ pages, onChange }) {
       if (e.altKey || e.ctrlKey || e.metaKey || e.defaultPrevented) return;
       const el = e.target;
       if (el.closest?.('input, textarea, select, [contenteditable="true"]')) return;
+      if (ownsGesture(el)) return;
       const spaceOnControl = e.key === ' ' && el.closest?.('a, button');
       const at = edges(current());
       let step = 0;
