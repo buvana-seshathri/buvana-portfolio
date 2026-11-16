@@ -1,6 +1,6 @@
 # Portfolio website: current code state
 
-Last updated: 2026-11-03. This is the latest code for Buvana's portfolio site. Every source file is saved
+Last updated: 2026-11-08. This is the latest code for Buvana's portfolio site. Every source file is saved
 alongside this doc under `portfolio/` with the same path it has in the repo (for example
 `portfolio/src/components/Hero/PhotoCarousel.jsx`). Rebuild the repo from those docs before making changes,
 and save files back here after each change so the project always has the latest code.
@@ -75,51 +75,123 @@ Design notes live in Notion: https://app.notion.com/p/portfolio-design-notes-403
 7. **Shared pieces:** `components/Plush/` (the doll: breathe, lean, "hi!" bubble, hop + hearts; plus `Floaty`
    sparkles/hearts/dots, `Sparkle`, `Heart`), `hooks/usePointerVars.js` (sets --px/--py from the mouse),
    and `.soft-bg` in `styles/global.css` (drifting pastel blobs + dotted paper texture).
-8. **Projects** (`src/components/Desktop/`, page `#projects`): **a desktop OS called "buvana os"** that looks
-   like a real Windows 11 desktop in dark mode (her reference: a screenshot of her own Windows desktop). Dark
-   page, NOT the About white.
-   - **Wallpaper:** original "silk" folds (dusk silk / midnight bloom / rose hour), auto-loaded from
-     `src/assets/desktop/wallpapers/` (made by `tools/make-wallpapers.py`). The window in front tints the
-     wallpaper with its project's `accent`. Right-click → Next desktop background crossfades.
-   - **Icons** (column-major from the top-left, like Windows): Recycle Bin, Projects and Research folders
-     (kawaii faces), readme.txt, Resume.pdf shortcut (arrow badge), then one app icon per project. Click selects,
-     double-click opens (one tap on phones), drag to move (snaps to the grid), rubber-band select, F2 renames
-     new folders. All icons are original SVG in `icons.jsx` (no OS/brand logos; Start is a sparkle tile).
-   - **Windows** (`Window.jsx`): title bar with app icon + caption buttons (minimize, maximize/restore, close
-     turns red), drag by the title bar, snap to the top (maximize) / left / right half with a snap preview,
-     dragging a maximized window restores it under the cursor, resize from all edges/corners, double-click
-     title to maximize, minimize flies into its taskbar button, open/close animations, focus order.
-   - **Taskbar** (`Taskbar.jsx`): left "Open to work" widget (where Windows shows weather), centered Start +
-     Search pill + Task view + pinned apps (Projects folder + every project) with running/active indicators and
-     hover tooltips, right tray (chevron, wifi/volume/battery → quick settings, live clock/date + bell →
-     notifications and calendar). Start menu: search (Enter opens the best match), Pinned grid, Recommended,
-     user + power menu (Sleep, Shut down = back to home, Restart = spinner then a fresh desktop). Quick settings
-     really work: Night light, Focus (hides icons), Wallpaper, brightness and volume sliders.
-   - **Right-click menu** on the desktop: View (large/medium/small icons), Sort by (name/type), Refresh, New →
-     Folder (inline rename), Next desktop background, Personalize. On an icon: Open, Open live site / View code.
-   - **Apps** (`apps/apps.jsx`): File Explorer for the Projects / Research folders (command bar, address bar,
-     search, nav pane, Details or Large icons view, sortable columns, a details pane that follows hover/selection,
-     status bar), Notepad for readme.txt (editable, Ln/Col status bar), Recycle Bin (empty), and the project
-     viewer (accent-tinted hero, "Try it" sketch, About, points, Built with chips, links or "Live link coming
-     soon"). The Projects folder opens on its own the first time the page opens (not on phones), with a welcome
-     toast.
-   - **"Try it" sketches** (`apps/demos.jsx`, all labelled sample/illustration): Grindland (complete quests,
-     path lights up, buildings rise, XP/coins), ephemera (drag pieces on a board, switch moods), Telly (another
-     pick + why), SmartDesk (route sample tickets with confidence; <0.60 goes to review, Approve), Novia (five
-     agents run in turn into a digest), OpsIntel (streaming rbac/rag/mcp/audit/eval log), Pressure Phrases
-     (toggle pressure phrases into the prompt), wifi2sat (WiFi and GNSS waves per gesture).
-   - **Phones (≤760px):** windows open full screen below the nav pill, icons start below it, taskbar shows Start,
-     open apps and the clock.
-   - Content: `site.desktop` (os name, user, widget, toast, readme lines, resume link) and `site.projects`
-     (8 projects: Grindland, ephemera, Telly, SmartDesk, Novia, OpsIntel, Pressure Phrases, wifi2sat; each with
-     type, status, accent, tagline, summary, points, stack, links, demo). Only facts she stated are used.
+8. **Projects** (`src/components/Desktop/`, page `#projects`): **a gaming-style monitor setup running a
+   mac-style desktop called "buvana os"** (Nov 8 rebuild; replaced the Windows 11 version). Dark room, NOT the
+   About white.
+   - **Rig** (`Desktop.jsx/.css`): dark room, thin-bezel monitor with a "bs" chin and power LED, stand, desk with
+     a keyboard and mouse that glow. **LED backlight** behind the monitor lights the wall and desk; colors per
+     side (`--led-top/left/right/bottom`) come from the wallpaper and from the windows on screen: each window
+     pulls the sides it covers toward its app's accent, the front one wins (`os/glow.js`). Telly's TV pushes the
+     current pick's color; hovering a dock app flashes the bottom strip. Sleep = slow breathing; Control Center
+     has Screen sync / Rainbow / Off + brightness. Phones: monitor fills the page, no stand/desk.
+   - **Wallpapers (Nov 10)**: 12 free Unsplash nature photos (Alps, mountain lake, foggy hills, cherry
+     blossoms, spring bloom, forest road, green canopy, golden sea, Cape Town sunset, northern lights, aurora
+     forest, lavender) picked through her Unsplash connector (account confirmed Nov 10), downloads registered,
+     hotlinked from images.unsplash.com (the workspace can't download them; Unsplash wants hotlinking anyway).
+     List: `UNSPLASH` in `os/glow.js`. A random one per visit (localStorage avoids repeating the last);
+     right-click desktop → "Next desktop background" (Windows-style), also View menu and Control Center;
+     "Photo by X on Unsplash" credit bottom-right (hidden on phones). She wants at least 10.
+   - **Wallpaper** (`os/Wallpaper.jsx`) older notes: **nature photos** from `src/assets/wallpapers/` (`1-name.jpg`, ...,
+     picked up automatically; slow drift + a shade for legibility; LED colors and the word's tint are sampled
+     from the photo's edges at runtime, `samplePhoto` in `os/glow.js`). She wants watermark-free Unsplash nature
+     photos (NOT her own cherry-blossom / Busan / Cinque Terre examples). Unsplash is blocked from Claude's
+     workspace; she connected the Unsplash connector (Nov 9) but it still fails (Nov 10) with "email address
+     has not been confirmed" until she confirms her Unsplash account email. Then search + download through it, or run `node tools/get-wallpapers.mjs` (downloads 6 free photos by id; resize to ~2400px). Until photos exist,
+     the old CSS palettes (Nebula, Lagoon, Ember) are the fallback. The **huge lowercase "projects"** (Fraunces
+     italic, rippling gradient letters, outline echo, leans away from the cursor) sits above the shelf and
+     fades back while inspecting. No caption pill (removed Nov 9).
+   - **Desktop icons + project windows** (Nov 10; replaced the info panel that slid in on the right): every
+     project is a normal-size desktop icon (40–52px) in a mac-style grid down the LEFT side (columns top to
+     bottom: the 6 projects, then Projects folder, readme.txt, Resume.pdf; orbit/constellation layouts are gone);
+     phones: a home-screen grid along the top. **One click** on a project (or its dock icon, Spotlight, Finder)
+     opens **two small mac windows** (Nov 10, she clarified: NOT tabs, like two Chrome windows on her
+     desktop), placed like HER screenshot (Nov 10, measured as fractions of the screen): the **Info** window
+     (`info:<id>`, "Telly · Info") wide across the top-middle (x 23% → 65%, y 4.5%, h 55%), the **photo**
+     window (`photo:<id>`, "telly.png") on top of it at the lower right (x 53%, y 36%, w 43%, h 58%),
+     overlapping its bottom-right corner. Icons on the left stay visible. Info is a compact landscape card. `project:<id>` is only the launcher that opens the pair; opening another
+     project closes the previous pair. Phones: one full-screen Info window with the photo on top.
+     (`os/ProjectWindow.jsx`: `PhotoView`, `InfoView`; chrome `titled`.)
+     - **Photo** window: the project's screenshots like Preview (blurred backdrop, double-click to zoom, a
+       filmstrip when there are several). Screenshots go in `src/assets/projects/` named after the project id
+       (`telly.png`, or `telly-1.png`, `telly-2.png`, ...). She hasn't supplied any yet; until then the
+       project's animated scene (`os/heroes.jsx`) is shown framed like a photo, labelled "screenshots coming
+       soon". Scenes: Grindland night city rising along a path; ephemera board with drifting pinned notes and a
+       mayfly; Telly TV flipping channels with a "why" bubble; SmartDesk tickets routing into 3 lanes with
+       sample confidence scores and a human-review lane; wifi2sat router, satellite on its orbit, two waves;
+       30 Days a 30-hex honeycomb, all lit.
+     - **Info** window, short and animated (she wants less text, like ryanpolasky.com's project.info): the
+       floating logo in a slowly turning dashed ring with the `01 / 06` index; `OBJECT / 0N · PROJECT.INFO`
+       (decodes in), the name in lowercase Fraunces (letters rise in, wave on hover), the tagline (types in),
+       the summary (wide windows only), mono rows TYPE / STATUS / STACK (30 Days: DAYS 30 / 30) whose lines
+       draw in, live site / source buttons that pop in.
+     The old per-project window designs (`apps/views/*`, `apps/demos.*`) are no longer used (kept in the repo
+     for now; can be deleted).
+   - **The room (Nov 10, final for now)**: she supplied her own wall picture (peach wall in golden-hour
+     light, a floating shelf with a trailing pothos and lavender top-left, star fairy lights top-right,
+     three polaroids and a "good things take time ♡" note on the right, window-light leaf shadows on the
+     left) → `src/assets/room/wall.webp` (from her 1672×941 PNG), shown as a cover background behind the
+     monitor (`Room.jsx` is now just that). "Just put the monitor and the bench": no other props; the
+     walnut desk keeps the felt mat with the cream keyboard and mouse (the size she asked for).
+     **LED backlight removed** (Nov 10, "remove the light effect"): no glow washes or strip behind the
+     monitor, no "Monitor lights" card in Control Center; `settings.led` is 'off' (the glow code in
+     `os/glow.js` / OS effect still runs but has no visible effect).
+     Rejected earlier on Nov 10: a pink cartoon wall, an evening wall with light sticks and tiny props, a
+     dark oak slat wall (she loved its realism but wanted cozier), a drawn cozy wall with a blurred plant and
+     lamp. Her reference photos were for the vibe only.
+   - The big word "projects" had its letters clipped (the gradient is painted inside each letter's box):
+     fixed Nov 10 with padding + negative margins on each letter. Nov 15 (she asked for "more creative"):
+     replaced by puffy pastel sticker letters (white outline, gloss, tilt, bob, jump when the cursor touches
+     one) plus a handwritten note "small things i built, one at a time" with a drawn arrow
+     (`site.desktop.wallpaperNote`). Later Nov 15 she found it too bubbly/cute: now plain faded block
+     capitals "PROJECTS" (Instrument Sans 700, white at 32% opacity), no jumping, no note.
+   - Nov 15: site cursor changed from the crosshair/brackets ("looks like a shooting game") to a dot with a
+     circle around it. Open OS windows now scale with the screen when the page resizes.
+   - Nov 15: window text shrinks with the screen via `--ui-scale` (CSS zoom on title bar + body content,
+     1 → 0.72; off on mobile). Project photos go in `src/assets/projects/<id>.png` or `<id>-1.png`, `<id>-2.png`.
+   - Unsplash wallpapers ARE used (hotlinked; Claude's test browser can't reach Unsplash, so its screenshots
+     showed plain colors). Each has Unsplash's blurhash, decoded (`blurhash` npm) into an instant blurred
+     preview under the photo; the LED colors come from the blurhash too.
+   - **30 Days, 30 Projects is COMPLETED** (she said so Nov 10): status "Completed", `challenge.completed: true`,
+     all 30 days lit in its scene and logo. `challenge.days` is empty; she can list each day's project there.
+   - **Mac UI** (`os/`): menu bar (✦ menu: About, Sleep, Restart, Shut Down = home; app name; File / Edit /
+     View / Window / Help; battery, wifi, Spotlight, Control Center, clock); dock with magnification, labels,
+     running dots, launch bounce, minimize-into-icon; traffic-light windows (drag, tile to top/left/right with
+     preview, resize, double-click to zoom); Spotlight (⌘/Ctrl+Space, preview pane); Mission Control
+     (Ctrl+↑, tiles the real windows); notification banner; boot screen the first time (waits for the loader).
+   - **Logos** (`icons.jsx`, original SVG squircles, redrawn Nov 9 to be cleaner and more app-like: shared tile
+     with a top light, colored glow and rim): Grindland three gold isometric blocks climbing + star, ephemera
+     mayfly of four translucent petals + double tail (placeholder until she designs her own), Telly cream TV
+     with a heart screen, SmartDesk one ticket into three lanes with a green check, wifi2sat wifi arcs with a
+     satellite on an orbit, 30 Days a dial of 30 ticks (11 lit) around a gold "30". Plus mac
+     folders, docs, trash, and an ✦ OS mark (no Apple logo).
+   - **A different window design per project** (`apps/views/`): Grindland = game title screen (gold mono title,
+     PRESS START, HUD, playable map, tickable quest log, inventory, RPG dialog typing the story); ephemera =
+     open scrapbook (letter, sticky notes, stamps, draggable board, wax-seal link); Telly = dark room with a
+     retro CRT (channel/why knobs, static, program guide, room glows in the pick's color); SmartDesk = light
+     helpdesk ticket (ROUTED stamp, activity feed, live sample queue); wifi2sat = research paper (abstract,
+     interactive Figure 1, contributions, keywords, [code]); 30 Days = badge wall (progress ring, stats,
+     30 hex badges: earned ones holographic, tilt, flip for details; next pulses; filters).
+   - **System apps** (`apps/system.jsx`): Finder (sidebar + tags, Gallery / Icons / List views), TextEdit
+     (readme, B/I/U), About buvana os, Trash.
+   - **Cursor inside the monitor** (`os/DesktopCursor.jsx`): glossy arrow with a comet tail in the front app's
+     color; spinning ring over clickables, text bar over inputs, hand while dragging, spinner while booting,
+     click burst.
+   - Content: `site.desktop` (os, user, wallpaperWord, notification, readme, resume), `site.projects` (6 apps:
+     Grindland, ephemera, Telly, SmartDesk, wifi2sat, 30 Days; Novia, OpsIntel and Pressure Phrases removed
+     Nov 8), `site.challenge` (`total: 30`, `days: [{ day, name, blurb, link }]`; days 1–3 are bracketed
+     placeholders she must replace).
+9. **Site cursor** (`src/components/Cursor/`, mounted in App): mouse only; crosshair + live x/y readout,
+   corner brackets that spin when idle and lock onto links/buttons with `[ LINK ]` / `[ CLICK ]` /
+   `[ OPEN ↗ ]`; big elements with `data-cursor-label` (hero carousel = "drag") get a larger box + label;
+   click = brackets snap in + square ripple; mix-blend-mode difference so it reads on white and dark pages;
+   hidden over `[data-own-cursor]` (the monitor screen).
 
 ## Palette (modern minimal)
 Cloud #F0F4FF · Periwinkle #C6D5FF · Blueberry #819BFF · Electric blue #4C62F5 · Indigo #302C83.
 Dark stage: #050507 / #0A0912 / #110F22, glows electric #3B4EE6 and purple #6D4AE0.
 Page text: indigo; body #3E3A8C; small labels #5E5B9E (passes 4.5:1).
-Fonts: Fraunces (display), Instrument Sans (body), JetBrains Mono (labels). The desktop uses Segoe UI Variable
-where available (falls back to Instrument Sans).
+Fonts: Fraunces (display), Instrument Sans (body), JetBrains Mono (labels). The desktop uses the system
+mac font (-apple-system / SF Pro) where available, falling back to Instrument Sans.
 
 ## Not saved here (binary files)
 - `src/assets/carousel/1.jpg` ... `8.jpg`: placeholder photos (numbered blue/purple gradients, 1200×900).
@@ -129,7 +201,6 @@ where available (falls back to Instrument Sans).
   (isnet-general-use) from Buvana's photo.
 - `src/assets/journey-plush.webp`: cut-out of the standing doll with the bouquet (rembg for her body plus a
   color key against the plain blue backdrop for the bouquet, which the model kept erasing). (The keepsake tin photo was removed from the site.)
-- `src/assets/desktop/wallpapers/*.jpg`: regenerate with `python3 tools/make-wallpapers.py` (numpy + Pillow).
 - `package-lock.json`: run `npm install` to regenerate.
 
 ## Decisions the user rejected (don't bring back)
@@ -144,7 +215,14 @@ the photo as a big full-height arch, a flip card (first with a "fun facts" back,
 (pmndrs wobbling-sphere material), "Off the clock" pills/hobbies in the card, a 2×2 facts grid listing experience (replaced by the timeline), a long page (dark "right now" bento + closing CTA), a full collage on a dark stage with a huge
 headline across the photo, bracket tags over the photo, the spinning circular text badge, a "02 — about"
 section label.
-Projects: flat CSS-shape mockups (they must look real); a white page like About.
+Projects: flat CSS-shape mockups (they must look real); a white page like About; the Windows 11 desktop
+(Nov 3, replaced by the mac-style monitor setup Nov 8); project windows that all share one layout (each project
+needs its own design); the "silk" JPG wallpapers; project windows that scroll and read like a PDF (Nov 9, the
+reason for the redesign); the "object library" (objects on a shelf, a turntable, decoding project.info:
+she wanted normal desktop icons on the side instead); the orbit / constellation icon layouts and the dashed orbit ring; the caption
+pill under "projects"; two rounds of project-window ideas she found "not that creative"; an info panel full of text (summary +
+highlight tiles): "less text, animated"; the info panel sliding in on the right; one window with Photo / Details
+tabs (she meant two separate small windows); the dark gaming-room backdrop (now a cozy wall).
 Other Projects ideas still open for later: a 3D room full of objects like the pmndrs "shopping" example (hover
 changes a side explanation box), a realistic gacha machine (needs a real .glb model), Pokémon-style shiny cards in
 a straight floating line (flip on hover, full spin into full view on click).

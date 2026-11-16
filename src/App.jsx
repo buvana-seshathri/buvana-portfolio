@@ -6,6 +6,7 @@ import Hero from './components/Hero/Hero.jsx';
 import About from './components/About/About.jsx';
 import Journey from './components/Journey/Journey.jsx';
 import Desktop from './components/Desktop/Desktop.jsx';
+import Cursor from './components/Cursor/Cursor.jsx';
 
 // Every page of the site, in order. `id` is its address (#about); the first page has no hash.
 // To add a page: add it here, and give the matching nav link in site.js the same href (#id).
@@ -29,6 +30,7 @@ export default function App() {
       {loading && <Loader onDone={handleLoaded} />}
       <Nav current={current} />
       <Pager pages={PAGES} onChange={setCurrent} />
+      <Cursor />
     </>
   );
 }

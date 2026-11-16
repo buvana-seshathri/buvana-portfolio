@@ -62,36 +62,38 @@ export const site = {
     plush: { alt: 'A plush doll of Buvana in a graduation cap and gown, winking, holding a diploma and a bouquet', hello: 'hi!' },
   },
 
-  // The Projects page: a desktop ("buvana os"). Wallpapers are the images in src/assets/desktop/wallpapers/.
+  // The Projects page: a mac-style desktop ("buvana os") on a monitor with an LED backlight.
   desktop: {
     os: 'buvana os',
     user: 'Buvana Seshathri',
-    // the little card at the left end of the taskbar (where Windows shows the weather)
-    widget: { title: 'Open to work', sub: 'SWE · applied AI' },
-    toast: {
+    // the huge word on the wallpaper (lowercase, like every big Fraunces heading)
+    wallpaperWord: 'projects',
+    // the little handwritten note under it (an arrow points from it toward the apps)
+    notification: {
       title: 'Welcome to buvana os',
-      body: 'Every app on this desktop is something I built. Double-click one to open it.',
-      touchBody: 'Every app on this desktop is something I built. Tap one to open it.',
+      body: 'Every app on this desktop is something I built. Click one to see what it is.',
+      touchBody: 'Every app on this desktop is something I built. Tap one to see what it is.',
     },
     resume: '/resume.pdf',
-    // readme.txt, opened in Notepad
+    // readme.txt, opened in TextEdit
     readme: [
       'hi, welcome to my desktop!',
       '',
-      'Every app here is a project I built.',
-      'Double-click an icon to open it, drag windows around,',
-      'snap them to the edges, or right-click the desktop.',
+      'Every app on the left of this desktop is something I built.',
+      'Click one to open it: its window has two tabs, a photo',
+      'of the project and the details about it.',
       '',
-      'The Projects folder lists everything in one place.',
-      'The Start menu has search, if you know what you want.',
+      'Spotlight (⌘ Space or Ctrl Space) finds anything.',
+      'The Control Center in the top-right changes the',
+      'wallpaper and the monitor lights.',
       '',
       'Have fun poking around.',
       '- buvana',
     ],
   },
 
-  // One entry per project. `demo` picks the little interactive sketch in its window
-  // (components/Desktop/apps/demos.jsx); `accent` tints the wallpaper while its window is in front.
+  // One entry per app on the desktop. `view` picks its window design (components/Desktop/apps/views/);
+  // `accent` tints the wallpaper and the monitor lights while its window is on screen.
   // Links left as null show as "coming soon".
   projects: [
     {
@@ -110,7 +112,7 @@ export const site = {
       ],
       stack: ['React Three Fiber', 'three.js', 'Supabase'],
       links: { site: null, code: null },
-      demo: 'grindland',
+      view: 'grindland',
     },
     {
       id: 'ephemera',
@@ -128,7 +130,7 @@ export const site = {
       ],
       stack: ['Web app', 'Google Drive sync', 'Netlify'],
       links: { site: 'https://buvi-ephemera.netlify.app', code: null },
-      demo: 'ephemera',
+      view: 'ephemera',
     },
     {
       id: 'telly',
@@ -146,7 +148,7 @@ export const site = {
       ],
       stack: ['Chrome MV3', 'TMDB', 'LLM (optional)'],
       links: { site: 'https://buvana-seshathri.github.io/telly', code: null },
-      demo: 'telly',
+      view: 'telly',
     },
     {
       id: 'smartdesk',
@@ -164,53 +166,7 @@ export const site = {
       ],
       stack: ['ChromaDB', 'Embeddings', 'Human review'],
       links: { site: null, code: null },
-      demo: 'smartdesk',
-    },
-    {
-      id: 'novia',
-      name: 'Novia',
-      type: 'Multi-agent system',
-      status: 'MVP in progress',
-      accent: '#9AB0FF',
-      tagline: 'A newsroom of agents for any niche community.',
-      summary:
-        'Monitors a niche community across Reddit, X, YouTube and RSS and delivers smart digests. Five agents split the work, and users bring their own Claude key, so it costs nothing to run.',
-      points: [
-        'Monitor → Parser → Prioritizer → Deduplicator → Delivery',
-        'SQLite cache so nothing is parsed twice',
-        'Grid and timeline views, email digests',
-      ],
-      stack: ['Python', 'CrewAI', 'Claude API', 'SQLite'],
-      links: { site: null, code: null },
-      demo: 'novia',
-    },
-    {
-      id: 'opsintel',
-      name: 'OpsIntel',
-      type: 'AI platform',
-      status: 'In progress',
-      accent: '#7BE0A8',
-      tagline: 'An AI operations platform with the guardrails built in.',
-      summary:
-        'An AI operations platform built around MCP tools and RAG, with role-based access, audit trails on every action, and LLM evals that run in CI before anything ships.',
-      points: ['MCP tools + RAG', 'RBAC and full audit trails', 'LLM evals in CI/CD'],
-      stack: ['Python', 'FastAPI', 'PostgreSQL', 'AWS', 'TypeScript'],
-      links: { site: null, code: null },
-      demo: 'opsintel',
-    },
-    {
-      id: 'pressure-phrases',
-      name: 'Pressure Phrases',
-      type: 'AI safety research',
-      status: 'Research',
-      accent: '#C9B8F5',
-      tagline: 'Do "just make the tests pass" prompts make coding agents cheat?',
-      summary:
-        'A one-week study testing whether everyday developer pressure, like "I\'m in a hurry" or "just make the tests pass", pushes AI coding agents to cheat. Built on ImpossibleBench, and published either way, null result included.',
-      points: ['Built on ImpossibleBench', 'Same tasks, different pressure phrases', 'Public repo and write-up'],
-      stack: ['ImpossibleBench', 'AI coding agents'],
-      links: { site: null, code: null },
-      demo: 'pressure',
+      view: 'smartdesk',
     },
     {
       id: 'wifi2sat',
@@ -224,7 +180,29 @@ export const site = {
       points: ['Transfer learning across signal types', 'WiFi → GNSS gesture recognition'],
       stack: ['Transfer learning', 'WiFi signals', 'GNSS'],
       links: { site: null, code: 'https://github.com/TusharW4ni/wifi2sat' },
-      demo: 'wifi2sat',
+      view: 'wifi2sat',
+    },
+    {
+      id: 'thirty',
+      name: '30 Days, 30 Projects',
+      shortName: '30 Days',
+      type: 'Challenge',
+      status: 'Completed',
+      accent: '#FFB547',
+      tagline: 'One small project a day, for thirty days.',
+      summary: 'Shipped a small project every day for thirty days, and finished all thirty.',
+      points: [],
+      stack: [],
+      links: { site: null, code: null },
+      view: 'challenge',
     },
   ],
+
+  // The 30 Days, 30 Projects challenge: completed. `days` can list each day's project for later use:
+  // { day, name, blurb, link } (link can be null).
+  challenge: {
+    total: 30,
+    completed: true,
+    days: [],
+  },
 };

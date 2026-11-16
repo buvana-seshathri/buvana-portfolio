@@ -1,0 +1,409 @@
+/* The object library: every project as a physical object on the desktop.
+   Browsing: the objects stand on a shelf under the big word. Inspecting: they file into a numbered index on
+   the left, the chosen one glides onto a turntable, and project.info slides in and decodes on the right. */
+
+.lib { position: absolute; inset: 0; z-index: 3; pointer-events: none; transition: opacity 0.4s; }
+.lib.is-hidden { opacity: 0; }
+.lib.is-hidden * { pointer-events: none !important; }
+.lib .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* ---------- header (top-left) ---------- */
+.lib-head {
+  position: absolute;
+  left: 24px;
+  top: calc(var(--mb) + 14px);
+  display: grid;
+  gap: 3px;
+  font: 10px/1.2 var(--font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+}
+.lib-head b { font-size: 12px; font-weight: 600; letter-spacing: 0.22em; color: #fff; }
+.lib-head__path { text-transform: none; letter-spacing: 0.04em; }
+.lib-head__count { color: rgba(255, 255, 255, 0.45); }
+
+.lib-hint {
+  position: absolute;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 10px/1 var(--font-mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+  animation: lib-fade 0.6s 0.4s both;
+}
+.lib-hint i { width: 7px; height: 7px; background: #fff; animation: lib-blink 1.1s steps(2, start) infinite; }
+@keyframes lib-blink { to { visibility: hidden; } }
+
+/* ---------- the objects ---------- */
+.lib-obj {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  pointer-events: auto;
+  transform-origin: 50% 50%;
+  perspective: 900px;
+  transition: transform 0.85s cubic-bezier(0.7, 0, 0.2, 1);
+  will-change: transform;
+  touch-action: manipulation;
+}
+.lib-obj.is-staged { pointer-events: none; }
+.lib-obj__float {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  animation: lib-bob 5.5s ease-in-out infinite;
+  animation-delay: calc(var(--i) * -0.9s);
+}
+@keyframes lib-bob {
+  0%, 100% { transform: translateY(0) rotateY(-9deg); }
+  50% { transform: translateY(-5%) rotateY(9deg); }
+}
+.is-inspecting .lib-obj:not(.is-staged) .lib-obj__float { animation: none; }
+.lib-obj.is-staged .lib-obj__float { animation-name: lib-bob-staged; animation-duration: 6s; }
+@keyframes lib-bob-staged { 0%, 100% { transform: translateY(-1.5%); } 50% { transform: translateY(1.5%); } }
+
+.lib-obj__body {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.6s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+.lib-obj.is-staged .lib-obj__body { transition: none; }
+.lib:not(.is-inspecting) .lib-obj:hover .lib-obj__body,
+.lib:not(.is-inspecting) .lib-obj:focus-visible .lib-obj__body { transform: translateZ(40px) rotateX(12deg) rotateY(-28deg); }
+.is-inspecting .lib-obj:not(.is-staged):hover .lib-obj__body { transform: rotateY(-30deg) scale(1.1); }
+
+.lib-thing { position: absolute; inset: 0; transform-style: preserve-3d; }
+.lib-thing__layer {
+  position: absolute;
+  inset: 0;
+  transform: translateZ(calc(var(--k) * var(--depth) * -1));
+  filter: brightness(0.42) saturate(1.3);
+}
+.lib-thing__layer.is-face { filter: none; }
+.lib-thing__layer svg { display: block; width: 100%; height: 100%; }
+.lib-thing__shine {
+  position: absolute;
+  inset: 0;
+  border-radius: 22%;
+  transform: translateZ(1px);
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.45) 46%, transparent 58%);
+  background-size: 260% 100%;
+  background-position: 120% 0;
+  mix-blend-mode: soft-light;
+  transition: background-position 0.9s;
+}
+.lib-obj:hover .lib-thing__shine,
+.lib-obj.is-staged .lib-thing__shine { background-position: -40% 0; }
+
+/* a soft pool of the project's color under each object */
+.lib-obj__pool {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: -18%;
+  height: 22%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--a), transparent);
+  opacity: 0.55;
+  filter: blur(6px);
+  transform: translateZ(-60px);
+  transition: opacity 0.4s;
+}
+.lib-obj:hover .lib-obj__pool { opacity: 0.9; }
+.is-inspecting .lib-obj:not(.is-staged) .lib-obj__pool { opacity: 0; }
+
+/* corner brackets lock on when you point at an object */
+.lib-obj__corners { position: absolute; inset: -14%; pointer-events: none; opacity: 0; transition: opacity 0.2s, inset 0.3s cubic-bezier(0.3, 1.6, 0.5, 1); }
+.lib-obj__corners i { position: absolute; width: 14%; height: 14%; border: 0 solid rgba(255, 255, 255, 0.9); }
+.lib-obj__corners i:nth-child(1) { left: 0; top: 0; border-left-width: 3px; border-top-width: 3px; }
+.lib-obj__corners i:nth-child(2) { right: 0; top: 0; border-right-width: 3px; border-top-width: 3px; }
+.lib-obj__corners i:nth-child(3) { left: 0; bottom: 0; border-left-width: 3px; border-bottom-width: 3px; }
+.lib-obj__corners i:nth-child(4) { right: 0; bottom: 0; border-right-width: 3px; border-bottom-width: 3px; }
+.lib:not(.is-inspecting) .lib-obj:hover .lib-obj__corners,
+.lib-obj:focus-visible .lib-obj__corners { opacity: 1; inset: -20%; }
+.is-inspecting .lib-obj:not(.is-staged):hover .lib-obj__corners { opacity: 1; inset: -30%; }
+.lib .lib-obj:focus-visible { outline: none; }
+
+/* ---------- labels ---------- */
+.lib-tag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: grid;
+  gap: 3px;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: transform 0.85s cubic-bezier(0.7, 0, 0.2, 1), translate 0.85s cubic-bezier(0.7, 0, 0.2, 1), opacity 0.35s;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+}
+.lib-tag small { font: 10px/1 var(--font-mono); letter-spacing: 0.14em; color: var(--a); }
+.lib-tag b { font: 600 12px/1.15 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; }
+.lib-tag em { font: 10px/1 var(--font-mono); font-style: normal; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255, 255, 255, 0.55); overflow: hidden; text-overflow: ellipsis; }
+.lib-tag--below { translate: -50% 0; justify-items: center; text-align: center; }
+.lib-tag--right { translate: 0 -50%; grid-auto-flow: column; align-items: baseline; gap: 10px; }
+.lib-tag--right b { font-size: 11px; color: rgba(255, 255, 255, 0.72); transition: color 0.2s; }
+.lib-tag--right.is-sel b { color: #fff; }
+.lib-tag--right.is-sel::before {
+  content: "";
+  position: absolute;
+  left: -46px;
+  top: 50%;
+  width: 30px;
+  height: 1.5px;
+  background: var(--a);
+  box-shadow: 0 0 8px var(--a);
+  transform-origin: left;
+  animation: lib-grow 0.5s 0.5s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
+@keyframes lib-grow { from { transform: scaleX(0); } }
+.lib-tag--none { opacity: 0; }
+
+/* ---------- the turntable ---------- */
+.lib-stage {
+  position: absolute;
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: pan-y;
+  font: 10px/1 var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  animation: lib-fade 0.5s 0.45s both;
+}
+.lib-stage:active { cursor: grabbing; }
+.lib-stage__tl, .lib-stage__tr, .lib-stage__bl, .lib-stage__br { position: absolute; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6); }
+.lib-stage__tl { left: 0; top: 0; color: #fff; }
+.lib-stage__tr { right: 0; top: 0; text-transform: none; letter-spacing: 0.06em; font-variant-numeric: tabular-nums; }
+.lib-stage__bl { left: 0; bottom: 0; color: var(--accent); }
+.lib-stage__br { right: 0; bottom: 0; }
+.lib-stage__disc {
+  position: absolute;
+  left: 50%;
+  aspect-ratio: 4 / 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 80%, transparent), color-mix(in srgb, var(--accent) 18%, transparent) 60%, transparent);
+  filter: blur(4px);
+  animation: lib-disc 3s ease-in-out infinite;
+}
+@keyframes lib-disc { 50% { opacity: 0.6; scale: 0.94; } }
+.lib-stage__frame {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  pointer-events: none;
+}
+.lib-stage__frame > i { position: absolute; width: 22px; height: 22px; border: 0 solid rgba(255, 255, 255, 0.75); animation: lib-frame 0.7s 0.4s cubic-bezier(0.3, 1.5, 0.5, 1) both; }
+.lib-stage__frame > i:nth-child(1) { left: 0; top: 0; border-left-width: 1.5px; border-top-width: 1.5px; --fx: -20px; --fy: -20px; }
+.lib-stage__frame > i:nth-child(2) { right: 0; top: 0; border-right-width: 1.5px; border-top-width: 1.5px; --fx: 20px; --fy: -20px; }
+.lib-stage__frame > i:nth-child(3) { left: 0; bottom: 0; border-left-width: 1.5px; border-bottom-width: 1.5px; --fx: -20px; --fy: 20px; }
+.lib-stage__frame > i:nth-child(4) { right: 0; bottom: 0; border-right-width: 1.5px; border-bottom-width: 1.5px; --fx: 20px; --fy: 20px; }
+@keyframes lib-frame { from { opacity: 0; translate: var(--fx) var(--fy); } }
+.lib-stage__scan {
+  position: absolute;
+  left: -6%;
+  right: -6%;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), #fff, var(--accent), transparent);
+  box-shadow: 0 0 18px 3px color-mix(in srgb, var(--accent) 60%, transparent);
+  opacity: 0;
+  animation: lib-scan 1.1s 0.55s cubic-bezier(0.5, 0, 0.5, 1) both;
+}
+@keyframes lib-scan {
+  0% { top: 0; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* ---------- project.info ---------- */
+.lib-panel {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+  container-type: size;
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--accent) 14%, transparent), transparent 40%),
+    rgba(14, 14, 18, 0.74);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(26px) saturate(1.4);
+  -webkit-backdrop-filter: blur(26px) saturate(1.4);
+  overflow: hidden;
+  animation: lib-panel-in 0.7s 0.15s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+  transition: background 0.5s;
+}
+@keyframes lib-panel-in { from { opacity: 0; transform: translateX(40px) scale(0.97); clip-path: inset(0 0 100% 0 round 16px); } to { clip-path: inset(0 0 0 0 round 16px); } }
+
+.lib-panel__bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px 12px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font: 10px/1 var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+.lib-panel__bar > span:first-child { display: flex; align-items: center; gap: 8px; color: #fff; text-transform: none; letter-spacing: 0.06em; font-size: 11px; }
+.lib-panel__bar > span:first-child i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+.lib-panel__bar > span:nth-child(2) { margin-left: auto; font-variant-numeric: tabular-nums; }
+.lib-panel__x {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  transition: background 0.15s, transform 0.2s;
+}
+.lib-panel__x:hover { background: rgba(255, 255, 255, 0.16); transform: rotate(90deg); }
+
+.lib-load {
+  flex: 1;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 12px;
+  font: 10px/1 var(--font-mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+.lib-load > i { width: 150px; height: 2px; background: rgba(255, 255, 255, 0.12); overflow: hidden; }
+.lib-load > i > i { display: block; height: 100%; background: var(--accent); box-shadow: 0 0 10px var(--accent); animation: lib-load 0.5s cubic-bezier(0.6, 0, 0.3, 1) both; }
+@keyframes lib-load { from { width: 0; } to { width: 100%; } }
+.lib-load small { font-size: 9px; letter-spacing: 0.1em; text-transform: none; color: rgba(255, 255, 255, 0.4); }
+
+.lib-info {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 2.4cqh, 16px);
+  padding: clamp(14px, 3.6cqh, 24px) clamp(16px, 7cqw, 28px);
+  overflow: hidden;
+}
+.lib-info__tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.lib-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  font: 9.5px/1 var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+}
+.lib-chip--status i { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); animation: lib-disc 1.6s ease-in-out infinite; }
+.lib-info__name {
+  margin: 0;
+  font: italic 500 clamp(28px, 10cqh, 54px)/0.95 var(--font-display);
+  font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+  letter-spacing: -0.035em;
+  text-transform: lowercase;
+  color: #fff;
+}
+.lib-info__tagline {
+  margin: -0.2em 0 0;
+  font: italic 400 clamp(14px, 3.6cqh, 19px)/1.3 var(--font-display);
+  color: color-mix(in srgb, var(--accent) 70%, #fff);
+}
+.lib-info__summary { margin: 0; font-size: clamp(11.5px, 2.5cqh, 13.5px); line-height: 1.55; color: rgba(255, 255, 255, 0.78); }
+.lib-info__points { margin: 0; padding: 0; list-style: none; display: grid; gap: 5px; }
+.lib-info__points li { display: flex; gap: 10px; font-size: clamp(11px, 2.4cqh, 13px); line-height: 1.4; color: rgba(255, 255, 255, 0.86); }
+.lib-info__points li::before { content: "→"; font-family: var(--font-mono); color: var(--accent); }
+.lib-info__stack { margin: 0; display: flex; gap: 12px; align-items: baseline; font: 10.5px/1.4 var(--font-mono); letter-spacing: 0.04em; color: rgba(255, 255, 255, 0.82); }
+.lib-info__stack small { font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.45); }
+.lib-info__links { margin-top: auto; display: flex; flex-wrap: wrap; gap: 8px; }
+.lib-info__links > * {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  font: 10.5px/1 var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s, transform 0.2s cubic-bezier(0.3, 1.6, 0.5, 1);
+  animation: lib-fade 0.4s 0.6s both;
+}
+.lib-info__links > a:hover { background: rgba(255, 255, 255, 0.12); transform: translateY(-2px); }
+.lib-info__links span { transition: transform 0.2s; }
+.lib-info__links > *:hover span { transform: translate(2px, -2px); }
+.lib-info__links .is-off { color: rgba(255, 255, 255, 0.45); border-style: dashed; }
+.lib-info__links .is-launch { margin-left: auto; background: var(--accent); border-color: transparent; color: #111; font-weight: 600; }
+.lib-info__links .is-launch:hover { transform: translateY(-2px); box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 50%, transparent); }
+.lib-info__links .is-launch:hover span { transform: translateX(3px); }
+
+.lib-days { display: grid; gap: 8px; font: 10px/1 var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); }
+.lib-days > div { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; max-width: 280px; }
+.lib-days i { aspect-ratio: 1; clip-path: polygon(25% 4%, 75% 4%, 100% 50%, 75% 96%, 25% 96%, 0 50%); background: rgba(255, 255, 255, 0.1); animation: lib-pop 0.4s var(--d) cubic-bezier(0.3, 1.6, 0.5, 1) both; }
+.lib-days i.is-done { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+@keyframes lib-pop { from { opacity: 0; transform: scale(0.3); } }
+
+.lib-panel__nav { display: flex; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+.lib-panel__nav button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 12px 18px;
+  border: 0;
+  background: none;
+  font: 10px/1 var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  transition: background 0.15s, color 0.15s;
+}
+.lib-panel__nav button + button { justify-content: flex-end; border-left: 1px solid rgba(255, 255, 255, 0.08); }
+.lib-panel__nav button:hover { background: rgba(255, 255, 255, 0.06); color: #fff; }
+.lib-panel__nav b { font-weight: 600; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lib-panel__nav span { font-size: 13px; transition: transform 0.2s; }
+.lib-panel__nav button:first-child:hover span { transform: translateX(-3px); }
+.lib-panel__nav button:last-child:hover span { transform: translateX(3px); }
+
+/* decoding text: the finished text reserves its space underneath */
+.dec { display: inline-grid; }
+.dec__ghost, .dec__live { grid-area: 1 / 1; }
+.dec__ghost { visibility: hidden; }
+
+@keyframes lib-fade { from { opacity: 0; } }
+
+/* ---------- phones ---------- */
+.lib.is-mobile .lib-head { display: none; }
+.lib.is-mobile .lib-panel { border-radius: 14px; }
+.lib.is-mobile .lib-info { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+.lib.is-mobile .lib-info__links .is-launch { margin-left: 0; }
+.lib.is-mobile .lib-stage__tr { display: none; }
+.lib.is-mobile .lib-tag em { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lib-obj, .lib-tag { transition-duration: 0.01s !important; }
+  .lib-obj__float, .lib-stage__disc, .lib-stage__scan, .lib-hint i { animation: none !important; }
+}

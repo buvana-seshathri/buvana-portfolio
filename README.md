@@ -25,23 +25,30 @@ src/
   components/Hero/           dark stage hero + PhotoCarousel (R3F photo ring + name ribbon)
   components/About/          sitting plush doll, intro card and photo over a soft pastel background
   components/Journey/        "the story so far": compact timeline that draws itself + the standing plush doll
-  components/Desktop/        the Projects page: "buvana os", a desktop with icons, windows, taskbar and Start
-    Desktop.jsx              icons, windows, menus, task view, power options (the whole desktop)
-    Window.jsx               a draggable / resizable / snapping window
-    Taskbar.jsx              taskbar, Start menu, quick settings, calendar
-    icons.jsx                folder, file and project app icons (original SVG)
-    apps/apps.jsx            File Explorer, Notepad, and the project viewer
-    apps/demos.jsx           the small "Try it" sketch inside each project's window
+  components/Desktop/        the Projects page: a monitor on a desk in front of a wall, running "buvana os"
+    Desktop.jsx              the monitor and stand, with the wall (Room) and the desk (Desk)
+    Room.jsx                 the wall (your picture, assets/room/wall.webp) and the desk
+    os/OS.jsx                the mac-style OS: windows, dock, menu bar, Spotlight, Control Center, Mission Control
+    os/Window.jsx            a draggable / resizable / tiling window with traffic lights
+    os/ProjectWindow.jsx     the two windows a project opens (photo + info); os/heroes.jsx the animated scenes
+    os/Dock.jsx, MenuBar.jsx, Spotlight.jsx, DesktopIcons.jsx (the icon grid), Wallpaper.jsx
+    os/DesktopCursor.jsx     the cursor inside the monitor
+    os/glow.js               the wallpaper list (Unsplash photos) and their colors
+    icons.jsx                app logos and system icons (original SVG)
+    apps/system.jsx          Finder (gallery / icons / list), TextEdit, About
+    apps/views/, apps/demos.*  the earlier per-project window designs (not used any more)
+  components/Cursor/         the site-wide techy cursor (crosshair, coordinates, lock-on brackets)
   components/Plush/          the plush doll (hi bubble, hop + hearts) and the little floating sparkles/hearts
   hooks/usePointerVars.js    sets --px / --py from the mouse so things can lean toward it
   assets/carousel/           carousel photos: 1.jpg, 2.jpg, ... (placeholders for now)
   assets/about/photo.jpg     the About photo
   assets/about/plush.webp    the sitting plush doll (transparent cut-out)
   assets/journey-plush.webp  the standing plush doll with the bouquet (transparent cut-out)
-  assets/desktop/wallpapers/ desktop wallpapers, in name order
   assets/fonts/              Fraunces soft-black "buvana" glyphs as a three.js typeface
+  assets/wallpapers/         desktop wallpaper photos: 1-name.jpg, 2-name.jpg, ...
+  assets/projects/           project screenshots: telly.png, or telly-1.png, telly-2.png, ...
 tools/make-typeface.mjs      regenerate the 3D glyph from a TTF
-tools/make-wallpapers.py     regenerate the "silk" wallpapers
+tools/get-wallpapers.mjs     download the nature wallpapers from Unsplash
 ```
 
 ## Carousel photos
@@ -67,21 +74,49 @@ the timeline is `site.journey`.
 
 ## Projects desktop
 
-The Projects page (`/#projects`) is a desktop called buvana os. Every project is an app.
+The Projects page (`/#projects`) is a monitor on a desk running a mac-style desktop called buvana os.
 
+- **Projects on the desktop:** every project is an icon down the left side. Click one and two windows open beside
+  the icons (details across the top, photo overlapping it at the lower right): **name.png** (its screenshots, like Preview) and **Name · Info**
+  (name, tagline, type / status / stack and links, all animating in). Opening another project swaps the pair.
+  On phones it's one window with the photo on top.
+- **Project screenshots:** drop them into `src/assets/projects/` named after the project's `id` from
+  `site.js`: `telly.png`, or `telly-1.png`, `telly-2.png`, ... for several (png, jpg, webp or avif). They
+  show up in the photo window with a filmstrip. Until a project has one, its animated scene shows instead.
+- **The big "PROJECTS" word:** faded white block capitals (Instrument Sans 700) on the wallpaper, so the
+  page reads as the projects page. Change it with `site.desktop.wallpaperWord`.
+- **Site cursor:** a small dot with a thin circle that trails behind, grows over clickable things and
+  squeezes on click (`components/Cursor`). Inside the monitor the Mac-style arrow cursor is used.
+- **Windows follow the page size:** when the browser resizes, open windows scale with the screen.
+- **Window text scales with the screen:** `--ui-scale` (set in `OS.jsx`, from 1 on a big monitor down to
+  0.72) zooms everything inside window title bars and bodies, so small screens get smaller text.
 - **Add or edit a project:** add an entry to `site.projects` in `src/content/site.js` (name, type, status,
-  tagline, summary, points, stack, links, accent color). It shows up on the desktop, in the taskbar, in the
-  Start menu and in the Projects folder. Give it an icon in `TILES` and `GLYPHS` in `components/Desktop/icons.jsx`
-  and, if you like, a "Try it" sketch in `apps/demos.jsx` (point `demo` at its key).
+  tagline, summary, points, stack, links, accent, view). It shows up on the desktop, in the dock,
+  Spotlight and the Projects folder. Keep the tagline to one line and the summary to two sentences. Give it a logo in `LOGOS` in `components/Desktop/icons.jsx` and a scene in
+  `os/heroes.jsx` (keyed by its `view`).
+- **30 Days, 30 Projects:** done! `site.challenge.completed` is `true`, so all 30 days show lit. You can list
+  each day's project in `site.challenge.days` (`{ day, name, blurb, link }`).
 - **Links:** set `links.site` / `links.code`; leave them `null` to show "Live link coming soon".
-- **Wallpapers:** any images in `src/assets/desktop/wallpapers/`, in name order. Right-click the desktop →
-  Next desktop background cycles them. `python3 tools/make-wallpapers.py` regenerates the built-in ones.
-- **Resume:** the Resume.pdf shortcut opens `site.desktop.resume` (`/resume.pdf`; put the file in `public/`).
+- **Wallpapers and lights:** 12 nature photos from Unsplash (free license, no watermark), listed in
+  `UNSPLASH` in `os/glow.js` and loaded straight from Unsplash (each with its blurhash, which shows as a
+  blurred preview until the photo arrives). A random one shows on every visit (never the
+  same twice in a row); right-click the desktop → "Next desktop background" (or View menu, or Control
+  Center) to flip through them. The photographer's credit sits bottom-right. Your own photos in
+  `src/assets/wallpapers/` (`1-name.jpg`, ...) join the list too.
+- **The room:** the wall behind the monitor is your picture, `src/assets/room/wall.webp` (any image works;
+  keep the name or change the import in `Room.jsx`). It covers the page, centered. The desk (walnut, felt
+  mat, keyboard, mouse) is `Desk` in `Room.jsx`, styled in `Desktop.css`.
+- **Resume:** the Resume.pdf icon opens `site.desktop.resume` (`/resume.pdf`; put the file in `public/`).
 
-What you can do on it: double-click icons (one tap on phones), drag icons around, drag a box to select several,
-right-click for View / Sort by / Refresh / New folder / Next background, drag windows by their title bar,
-snap them to the top or a side, resize from any edge, minimize to the taskbar, use Start search, quick settings
-(night light, focus, brightness), the calendar, task view and the power menu.
+What you can do: click a project to open it (one tap on phones), drag windows (tile them to the top or a side), resize them, use the traffic
+lights, the dock (it magnifies), Spotlight (⌘/Ctrl + Space), Mission Control (Ctrl + ↑), the menu bar menus
+(Sleep, Restart, Shut Down goes home) and Control Center (Focus, Night Shift, wallpaper, brightness).
+
+## Cursors
+
+`components/Cursor/` is the site cursor (mouse only): a crosshair with live coordinates whose corner brackets
+lock onto links and buttons with a `[ label ]`. Give any element `data-cursor-label="..."` to label it.
+Inside the monitor (`data-own-cursor`) the OS draws its own cursor instead.
 
 ## Pages
 

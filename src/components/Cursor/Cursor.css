@@ -1,0 +1,21 @@
+/* The site cursor: a small dot with a thin circle around it that trails a beat behind.
+   White with mix-blend-mode: difference, so it inverts against anything underneath. */
+html.has-tech-cursor,
+html.has-tech-cursor * { cursor: none !important; }
+
+.tc { position: fixed; inset: 0; z-index: 10000; pointer-events: none; mix-blend-mode: difference; opacity: 0; transition: opacity 0.2s; }
+.tc.is-shown { opacity: 1; }
+.tc > * { position: absolute; left: 0; top: 0; width: 0; height: 0; will-change: transform; }
+
+.tc__dot i,
+.tc__ring i { position: absolute; border-radius: 50%; transition: transform 0.25s cubic-bezier(0.3, 1.4, 0.5, 1), background-color 0.2s, opacity 0.2s; }
+
+.tc__dot i { left: -3px; top: -3px; width: 6px; height: 6px; background: #fff; }
+.tc__ring i { left: -16px; top: -16px; width: 32px; height: 32px; border: 1.5px solid #fff; opacity: 0.85; }
+
+/* over something clickable: the circle grows and fills faintly, the dot shrinks */
+.tc.is-hover .tc__ring i { transform: scale(1.45); background-color: rgba(255, 255, 255, 0.12); }
+.tc.is-hover .tc__dot i { transform: scale(0.6); }
+/* pressing squeezes the circle in */
+.tc.is-down .tc__ring i { transform: scale(0.75); }
+.tc.is-hover.is-down .tc__ring i { transform: scale(1.15); }

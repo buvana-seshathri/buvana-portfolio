@@ -1,0 +1,179 @@
+/* Telly: a dark room with a retro TV. The room glows in the color of the current pick (--hue). */
+@property --hue { syntax: '<color>'; inherits: true; initial-value: #FF8FA8; }
+
+.v-telly {
+  position: relative;
+  isolation: isolate;
+  min-height: 100%;
+  padding: 50px 28px 28px;
+  background: linear-gradient(180deg, #150C1C, #1E1023 60%, #26142A);
+  color: #FBEFF3;
+  transition: --hue 0.8s ease;
+}
+.v-telly__glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(50% 42% at 50% 38%, color-mix(in oklab, var(--hue) 45%, transparent), transparent 75%);
+  filter: blur(10px);
+  animation: telly-flicker 5s ease-in-out infinite;
+}
+@keyframes telly-flicker { 40% { opacity: 0.85; } 42% { opacity: 1; } 70% { opacity: 0.92; } }
+
+.v-telly__head { text-align: center; margin-bottom: 18px; }
+.v-telly__marquee { display: flex; justify-content: center; gap: 10px; margin: 0 0 10px; }
+.v-telly__marquee i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #FFE7A8;
+  box-shadow: 0 0 8px #FFD36B;
+  animation: telly-bulb 1.4s steps(2) infinite;
+  animation-delay: calc(var(--i) * 0.1s);
+}
+@keyframes telly-bulb { 50% { opacity: 0.25; box-shadow: none; } }
+.v-telly__head h2 {
+  margin: 0;
+  font: italic 500 clamp(42px, 6.4cqw, 66px)/1 var(--font-display);
+  font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+  letter-spacing: -0.03em;
+  color: #fff;
+  text-shadow: 0 0 24px color-mix(in oklab, var(--hue) 70%, transparent);
+}
+.v-telly__tag { margin: 6px 0 0; font-size: 15px; color: rgba(251, 239, 243, 0.75); }
+
+/* the TV */
+.v-telly__set { display: flex; flex-direction: column; align-items: center; margin: 54px 0 26px; }
+.v-telly__tv {
+  position: relative;
+  width: min(640px, 100%);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 76px;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 26px;
+  background: linear-gradient(160deg, #F7E3D6, #E3BFAE 60%, #CFA28F);
+  box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.7), inset 0 2px 0 rgba(255, 255, 255, 0.6), inset 0 -6px 12px rgba(120, 60, 40, 0.25);
+}
+.v-telly__antenna { position: absolute; left: 50%; top: -46px; width: 0; height: 46px; }
+.v-telly__antenna i { position: absolute; bottom: 0; width: 3px; height: 54px; background: #D9C4B8; border-radius: 3px; transform-origin: bottom; }
+.v-telly__antenna i:first-child { transform: rotate(-28deg); }
+.v-telly__antenna i:last-child { transform: rotate(32deg); }
+.v-telly__antenna i::after { content: ""; position: absolute; top: -5px; left: -3px; width: 9px; height: 9px; border-radius: 50%; background: #FFD36B; }
+
+.v-telly__screen {
+  position: relative;
+  overflow: hidden;
+  padding: 16px;
+  border-radius: 34px / 26px;
+  background: radial-gradient(120% 100% at 40% 30%, color-mix(in oklab, var(--hue) 22%, #2B1238), #12071A 75%);
+  box-shadow: inset 0 0 0 6px #2A1A22, inset 0 0 40px rgba(0, 0, 0, 0.8), 0 0 30px color-mix(in oklab, var(--hue) 40%, transparent);
+  min-height: 230px;
+}
+.v-telly__show { display: flex; gap: 16px; animation: telly-on 0.5s cubic-bezier(0.2, 0.9, 0.3, 1) both; }
+@keyframes telly-on { from { opacity: 0; transform: scaleY(0.02) scaleX(0.6); filter: brightness(3); } }
+.v-telly__poster {
+  flex: none;
+  display: grid;
+  place-items: end start;
+  width: 120px;
+  aspect-ratio: 2 / 3;
+  padding: 10px;
+  border-radius: 8px;
+  background: linear-gradient(160deg, var(--hue), #2A1640);
+  font: italic 19px var(--font-display);
+  box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.8);
+}
+.v-telly__info { display: flex; flex-direction: column; gap: 4px; min-width: 0; font-size: 12px; color: rgba(251, 239, 243, 0.65); }
+.v-telly__info small { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; color: var(--hue); }
+.v-telly__info b { font-size: 17px; font-weight: 600; color: #fff; line-height: 1.25; }
+.v-telly__info ul { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.v-telly__info li { padding: 6px 9px; border-radius: 6px; background: rgba(255, 255, 255, 0.08); color: rgba(251, 239, 243, 0.85); animation: telly-on 0.4s ease both; }
+.v-telly__info li:nth-child(2) { animation-delay: 0.06s; }
+.v-telly__info li:nth-child(3) { animation-delay: 0.12s; }
+
+.v-telly__lines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(180deg, rgba(0, 0, 0, 0.22) 0 1px, transparent 1px 3px);
+  mix-blend-mode: multiply;
+}
+.v-telly__static {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: telly-static 0.35s steps(4) both;
+}
+@keyframes telly-static { 0% { opacity: 0.9; background-position: 0 0; } 50% { background-position: 40px 20px; } 100% { opacity: 0; background-position: 10px 60px; } }
+
+.v-telly__panel { display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 6px; }
+.v-telly__panel small { font: 700 9px var(--font-mono); letter-spacing: 0.16em; color: #7A4A3A; margin-bottom: 10px; }
+.v-telly__knob {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  border: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #FFF4EC, #CFA28F 70%);
+  box-shadow: 0 4px 8px -2px rgba(80, 40, 30, 0.5), inset 0 -3px 5px rgba(80, 40, 30, 0.25);
+  transform: rotate(var(--turn));
+  transition: transform 0.4s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.v-telly__knob i { position: absolute; left: 50%; top: 5px; width: 4px; height: 14px; margin-left: -2px; border-radius: 2px; background: #7A4A3A; }
+.v-telly__knob.is-on i { background: #D9406D; }
+.v-telly__knob:active { transform: rotate(var(--turn)) scale(0.94); }
+.v-telly__grill {
+  width: 46px;
+  flex: 1;
+  min-height: 40px;
+  margin-top: 4px;
+  border-radius: 8px;
+  background: repeating-linear-gradient(180deg, #A9786A 0 2px, transparent 2px 6px);
+  opacity: 0.6;
+}
+.v-telly__legs { display: flex; justify-content: space-between; width: min(520px, 80%); }
+.v-telly__legs i { width: 6px; height: 26px; border-radius: 3px; background: #CFA28F; transform: skewX(14deg); }
+.v-telly__legs i:last-child { transform: skewX(-14deg); }
+
+/* program guide */
+.v-telly__guide { max-width: 720px; margin: 0 auto; }
+.v-telly__guide h3 { margin: 0 0 10px; font: 700 11px var(--font-mono); letter-spacing: 0.28em; color: var(--hue); }
+.v-telly__guide ol { margin: 0; padding: 0; list-style: none; border-top: 1px solid rgba(255, 255, 255, 0.12); }
+.v-telly__guide li { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 16px; padding: 12px 4px; border-bottom: 1px solid rgba(255, 255, 255, 0.12); transition: background 0.2s; }
+.v-telly__guide li:hover { background: rgba(255, 255, 255, 0.04); }
+.v-telly__guide time { font: 700 16px var(--font-mono); color: #fff; }
+.v-telly__guide time small { margin-left: 3px; font-size: 9px; color: rgba(251, 239, 243, 0.5); }
+.v-telly__guide b { font-size: 13px; color: var(--hue); }
+.v-telly__guide p { margin: 3px 0 0; font-size: 14px; line-height: 1.55; color: rgba(251, 239, 243, 0.82); }
+.v-telly__stack { display: flex; flex-wrap: wrap; gap: 6px; }
+.v-telly__stack span { padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.08); font-size: 12px; }
+
+.v-telly__links { display: flex; justify-content: center; gap: 10px; margin-top: 20px; }
+.v-telly__links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border-radius: 999px;
+  background: var(--hue);
+  color: #26142A;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  box-shadow: 0 0 24px color-mix(in oklab, var(--hue) 60%, transparent);
+  transition: transform 0.2s;
+}
+.v-telly__links a:hover { transform: translateY(-2px); }
+
+@container (max-width: 620px) {
+  .v-telly { padding: 46px 14px 18px; }
+  .v-telly__tv { grid-template-columns: minmax(0, 1fr); }
+  .v-telly__panel { flex-direction: row; justify-content: center; padding-top: 0; }
+  .v-telly__panel small { margin: 0 10px 0 0; }
+  .v-telly__grill { display: none; }
+  .v-telly__show { flex-direction: column; }
+  .v-telly__poster { width: 100%; aspect-ratio: 16 / 7; }
+}

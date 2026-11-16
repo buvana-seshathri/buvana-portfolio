@@ -1,0 +1,148 @@
+/* ephemera: an open scrapbook on a soft desk. Cream paper, washi tape, sticky notes, stamps, a wax seal. */
+.v-eph {
+  min-height: 100%;
+  padding: 50px 26px 26px;
+  background:
+    radial-gradient(70% 60% at 50% 0%, rgba(255, 214, 234, 0.55), transparent 70%),
+    #E9D3C6;
+  color: #4A2E42;
+}
+
+.v-eph__book {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  border-radius: 6px;
+  box-shadow: 0 30px 50px -24px rgba(74, 46, 66, 0.55), 0 2px 0 rgba(255, 255, 255, 0.6) inset;
+}
+/* the spine in the middle */
+.v-eph__book::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 46px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, rgba(74, 46, 66, 0.16) 45%, rgba(74, 46, 66, 0.22) 50%, rgba(74, 46, 66, 0.16) 55%, transparent);
+  pointer-events: none;
+}
+
+.v-eph__page {
+  position: relative;
+  padding: 34px 30px 28px;
+  background:
+    radial-gradient(circle, rgba(74, 46, 66, 0.12) 1px, transparent 1.4px) 0 0 / 20px 20px,
+    linear-gradient(180deg, #FFFBF4, #FBF1E6);
+}
+.v-eph__page--left { border-radius: 6px 0 0 6px; }
+.v-eph__page--right { border-radius: 0 6px 6px 0; display: flex; flex-direction: column; gap: 12px; }
+
+.v-eph__tape {
+  position: absolute;
+  width: 92px;
+  height: 22px;
+  background: repeating-linear-gradient(135deg, rgba(240, 141, 180, 0.65) 0 6px, rgba(255, 214, 234, 0.65) 6px 12px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+.v-eph__tape--a { left: 24px; top: -8px; transform: rotate(-6deg); }
+.v-eph__tape--b { right: 30px; top: -8px; transform: rotate(5deg); background: repeating-linear-gradient(135deg, rgba(184, 166, 255, 0.6) 0 6px, rgba(226, 220, 251, 0.6) 6px 12px); }
+
+.v-eph__dear { margin: 0; font: italic 15px var(--font-display); color: #9D6A91; }
+.v-eph__title {
+  margin: 2px 0 2px;
+  font: italic 500 clamp(40px, 6cqw, 60px)/1 var(--font-display);
+  font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+  letter-spacing: -0.03em;
+  color: #4A2E42;
+}
+.v-eph__tag { margin: 0 0 14px; font-size: 14px; color: #8A5A7E; }
+.v-eph__letter {
+  margin: 0;
+  padding: 2px 0;
+  font: italic 16px/31px var(--font-display);
+  background: linear-gradient(transparent 30px, rgba(157, 106, 145, 0.25) 30px, rgba(157, 106, 145, 0.25) 31px, transparent 31px) 0 0 / 100% 31px;
+  color: #4A2E42;
+}
+.v-eph__sign { margin: 6px 0 18px; text-align: right; font: italic 22px var(--font-display); font-variation-settings: "SOFT" 100, "WONK" 1; color: #C9649A; }
+
+.v-eph__stickies { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 18px; padding: 0; list-style: none; }
+.v-eph__stickies li {
+  flex: 1 1 120px;
+  padding: 14px 12px 16px;
+  background: var(--bg);
+  box-shadow: 0 10px 16px -10px rgba(74, 46, 66, 0.45);
+  transform: rotate(var(--r));
+  font: 13px/1.4 var(--font-body);
+  transition: transform 0.25s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.v-eph__stickies li:hover { transform: rotate(0deg) translateY(-4px) scale(1.04); }
+
+.v-eph__stamps { display: flex; flex-wrap: wrap; gap: 14px; margin: 0; padding: 0; list-style: none; }
+.v-eph__stamps li {
+  padding: 6px;
+  /* a white sheet with a row of punched holes; the stamp face covers the middle, so only the edges look perforated */
+  background: radial-gradient(circle, transparent 2.3px, #fff 2.7px) -4px -4px / 8px 8px;
+  transform: rotate(var(--r));
+  filter: drop-shadow(0 4px 6px rgba(74, 46, 66, 0.25));
+  transition: transform 0.25s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.v-eph__stamps li:hover { transform: rotate(0deg) scale(1.06); }
+.v-eph__stamps span {
+  display: block;
+  padding: 10px 12px;
+  border: 1px solid #C9649A;
+  background: linear-gradient(160deg, #FFE1EC, #E2DCFB);
+  font: 600 11px var(--font-mono);
+  letter-spacing: 0.04em;
+  color: #6B3552;
+}
+
+.v-eph__hand { margin: 0; font: italic 17px var(--font-display); color: #9D6A91; }
+.v-eph__page--right .demo { --d-ink: #4A2E42; --d-soft: #8A5A7E; --d-line: rgba(74, 46, 66, 0.2); --d-chip: rgba(255, 255, 255, 0.7); --d-accent: #F08DB4; --d-on-accent: #4A2E42; }
+.v-eph__page--right .demo-eph__board { height: 270px; box-shadow: inset 0 0 0 1px rgba(74, 46, 66, 0.12); }
+
+.v-eph__foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 8px; }
+.v-eph__postmark {
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 92px;
+  border: 2px solid rgba(201, 100, 154, 0.7);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 5px rgba(255, 251, 244, 1), inset 0 0 0 6px rgba(201, 100, 154, 0.5);
+  color: #C9649A;
+  text-align: center;
+  transform: rotate(-12deg);
+}
+.v-eph__postmark b { display: block; font: 700 15px var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; }
+.v-eph__postmark small { display: block; font-size: 10px; }
+
+.v-eph__seal {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  border-radius: 46% 54% 50% 50% / 52% 46% 54% 48%;
+  background: radial-gradient(circle at 35% 30%, #F37BA9, #C2386F 60%, #8E1F4D);
+  box-shadow: 0 8px 18px -6px rgba(142, 31, 77, 0.6), inset 0 -4px 8px rgba(0, 0, 0, 0.25), inset 0 3px 6px rgba(255, 255, 255, 0.3);
+  color: #FFE3EE;
+  text-decoration: none;
+  text-align: center;
+  transition: transform 0.3s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.v-eph__seal::before { content: ""; position: absolute; inset: 9px; border: 1.5px dashed rgba(255, 227, 238, 0.55); border-radius: 50%; }
+.v-eph__seal span { font: italic 600 20px/1 var(--font-display); }
+.v-eph__seal small { display: block; font-size: 10px; letter-spacing: 0.08em; }
+.v-eph__seal:hover { transform: rotate(-10deg) scale(1.08); }
+.v-eph__soon { font: italic 14px var(--font-display); color: #9D6A91; }
+
+@container (max-width: 760px) {
+  .v-eph { padding: 46px 12px 16px; }
+  .v-eph__book { grid-template-columns: minmax(0, 1fr); }
+  .v-eph__book::after { display: none; }
+  .v-eph__page--left { border-radius: 6px 6px 0 0; }
+  .v-eph__page--right { border-radius: 0 0 6px 6px; border-top: 1px dashed rgba(74, 46, 66, 0.2); }
+  .v-eph__page { padding: 28px 18px 22px; }
+}

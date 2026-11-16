@@ -1,0 +1,115 @@
+/* SmartDesk: a bright, tidy helpdesk app. White cards, cool blues, a ticket with a tear-off stub. */
+.v-desk {
+  min-height: 100%;
+  padding: 50px 26px 26px;
+  background: linear-gradient(180deg, #EEF4FF, #F7FAFF);
+  color: #1B2B4B;
+  font-family: var(--font-body);
+}
+
+.v-desk__crumbs { display: flex; gap: 8px; margin-bottom: 14px; font-size: 12px; color: #5C6F95; }
+.v-desk__crumbs span::after { content: "/"; margin-left: 8px; opacity: 0.5; }
+.v-desk__crumbs b { color: #2366D9; font-weight: 600; }
+
+.v-desk__ticket {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 170px;
+  margin-bottom: 18px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 20px 40px -26px rgba(35, 102, 217, 0.45), 0 0 0 1px rgba(35, 102, 217, 0.08);
+  animation: desk-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+@keyframes desk-in { from { opacity: 0; transform: translateY(12px); } }
+.v-desk__main { padding: 22px 26px; }
+.v-desk__id { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; font: 12px var(--font-mono); color: #5C6F95; }
+.v-desk__dot { width: 8px; height: 8px; border-radius: 50%; background: #18A06A; box-shadow: 0 0 0 4px rgba(24, 160, 106, 0.15); }
+.v-desk h2 { margin: 0; font-size: 28px; font-weight: 600; letter-spacing: -0.02em; }
+.v-desk__subject { margin: 4px 0 16px; font-size: 16px; color: #3A4E78; }
+.v-desk__fields { display: flex; flex-wrap: wrap; gap: 26px; margin: 0 0 16px; }
+.v-desk__fields dt { margin-bottom: 5px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #7C8DB0; }
+.v-desk__fields dd { margin: 0; }
+.v-desk__pill { padding: 4px 10px; border-radius: 999px; background: #E2F7EC; color: #137A52; font-size: 12px; font-weight: 600; }
+.v-desk__labels { display: flex; flex-wrap: wrap; gap: 6px; }
+.v-desk__labels span { padding: 3px 9px; border-radius: 6px; background: #EAF0FF; color: #2366D9; font-size: 12px; }
+.v-desk h3 { margin: 0 0 8px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #7C8DB0; }
+.v-desk h3 small { margin-left: 6px; font-weight: 400; letter-spacing: 0; text-transform: none; }
+.v-desk__desc { margin: 0; font-size: 15px; line-height: 1.65; color: #2B3D63; }
+
+/* tear-off stub */
+.v-desk__stub {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px;
+  border-left: 2px dashed #D3DDF2;
+  text-align: center;
+  font-size: 11px;
+  color: #7C8DB0;
+}
+.v-desk__stub::before,
+.v-desk__stub::after {
+  content: "";
+  position: absolute;
+  left: -11px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #EEF4FF;
+}
+.v-desk__stub::before { top: -10px; }
+.v-desk__stub::after { bottom: -10px; background: #F4F8FF; }
+.v-desk__stamp {
+  padding: 6px 12px;
+  border: 3px solid #2366D9;
+  border-radius: 6px;
+  color: #2366D9;
+  font: 800 18px var(--font-mono);
+  letter-spacing: 0.18em;
+  transform: rotate(-12deg);
+  opacity: 0.85;
+  animation: desk-stamp 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) 0.4s both;
+}
+@keyframes desk-stamp { from { opacity: 0; transform: rotate(-12deg) scale(2.2); } }
+
+.v-desk__cols { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr); gap: 18px; }
+.v-desk__activity,
+.v-desk__queue { padding: 18px; border-radius: 14px; background: #fff; box-shadow: 0 0 0 1px rgba(35, 102, 217, 0.08); }
+.v-desk__activity ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; position: relative; }
+.v-desk__activity ol::before { content: ""; position: absolute; left: 15px; top: 8px; bottom: 8px; width: 2px; background: #E1E9FA; }
+.v-desk__activity li { position: relative; display: flex; gap: 12px; animation: desk-in 0.4s ease both; animation-delay: calc(0.2s + var(--i) * 0.1s); }
+.v-desk__avatar {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 700;
+}
+.v-desk__avatar.is-bot { background: #DCEBFF; color: #2366D9; }
+.v-desk__avatar.is-person { background: linear-gradient(135deg, #9EC5FF, #9A6BF0); color: #fff; }
+.v-desk__activity b { font-size: 13px; }
+.v-desk__activity p { margin: 2px 0 0; font-size: 13px; line-height: 1.5; color: #3A4E78; }
+
+.v-desk__queue .demo {
+  --d-ink: #1B2B4B; --d-soft: #6A7DA3; --d-line: #D3DDF2; --d-panel: #F2F6FF; --d-chip: #fff;
+  --d-accent: #2366D9; --d-on-accent: #fff; --d-card: #fff; --d-accent-ink: #2366D9;
+}
+
+.v-desk__links { margin-top: 16px; }
+.v-desk__links a { color: #2366D9; font-weight: 600; text-decoration: none; display: inline-flex; gap: 6px; align-items: center; }
+.v-desk__links .v-links__soon { font-size: 13px; color: #7C8DB0; }
+
+@container (max-width: 760px) {
+  .v-desk { padding: 46px 14px 18px; }
+  .v-desk__ticket { grid-template-columns: minmax(0, 1fr); }
+  .v-desk__stub { border-left: 0; border-top: 2px dashed #D3DDF2; flex-direction: row; }
+  .v-desk__stub::before, .v-desk__stub::after { display: none; }
+  .v-desk__cols { grid-template-columns: minmax(0, 1fr); }
+}

@@ -1,0 +1,202 @@
+/* Grindland: a game title screen at night. Chunky gold mono type, pixel-ish panels, an RPG dialog box. */
+.v-grind {
+  --gold: #FFC861;
+  --gold-deep: #C9811E;
+  position: relative;
+  isolation: isolate;
+  min-height: 100%;
+  padding: 52px 28px 28px;
+  background: linear-gradient(180deg, #1B0F33 0%, #2A1550 55%, #3A1B4F 100%);
+  color: #F7EBD4;
+  font-family: var(--font-mono);
+}
+
+.v-grind__sky {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    radial-gradient(1.2px 1.2px at 12% 18%, #fff, transparent),
+    radial-gradient(1px 1px at 72% 12%, #fff, transparent),
+    radial-gradient(1.4px 1.4px at 40% 30%, #FFE6A6, transparent),
+    radial-gradient(1px 1px at 88% 40%, #fff, transparent),
+    radial-gradient(1px 1px at 24% 52%, #fff, transparent),
+    radial-gradient(1.3px 1.3px at 60% 64%, #fff, transparent),
+    radial-gradient(120% 50% at 50% 110%, rgba(255, 150, 80, 0.25), transparent 70%);
+  animation: grind-twinkle 4s ease-in-out infinite alternate;
+}
+@keyframes grind-twinkle { to { opacity: 0.7; } }
+
+.v-grind__title { text-align: center; margin-bottom: 22px; }
+.v-grind__save { margin: 0 0 10px; font-size: 11px; letter-spacing: 0.3em; color: rgba(247, 235, 212, 0.6); }
+.v-grind__title h2 {
+  margin: 0;
+  font: 800 clamp(34px, 6.4cqw, 64px)/1 var(--font-mono);
+  letter-spacing: 0.06em;
+}
+.v-grind__title h2 span {
+  display: inline-block;
+  background: linear-gradient(180deg, #FFF3C4 10%, var(--gold) 55%, var(--gold-deep) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 4px 0 #6B2E8A) drop-shadow(0 8px 14px rgba(0, 0, 0, 0.5));
+  animation: grind-bob 2.4s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.08s);
+}
+@keyframes grind-bob { 50% { transform: translateY(-4px); } }
+.v-grind__tag { margin: 12px 0 16px; font: italic 16px/1.4 var(--font-display); color: #F7EBD4; opacity: 0.85; }
+.v-grind__start {
+  padding: 8px 16px;
+  border: 2px solid var(--gold);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--gold);
+  font: 700 13px var(--font-mono);
+  letter-spacing: 0.2em;
+  animation: grind-blink 1.2s steps(2) infinite;
+}
+.v-grind__start:hover { background: var(--gold); color: #2A1550; animation: none; }
+@keyframes grind-blink { 50% { opacity: 0.45; } }
+
+.v-grind__hud {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-bottom: 16px;
+  padding: 10px 16px;
+  border: 2px solid rgba(255, 200, 97, 0.4);
+  border-radius: 6px;
+  background: rgba(10, 4, 22, 0.55);
+  font-size: 12px;
+}
+.v-grind__stat b { margin-right: 6px; color: var(--gold); letter-spacing: 0.1em; }
+.v-grind__bar { flex: 1; min-width: 100px; height: 10px; border: 2px solid rgba(255, 200, 97, 0.5); border-radius: 3px; overflow: hidden; }
+.v-grind__bar i { display: block; height: 100%; background: repeating-linear-gradient(90deg, var(--gold) 0 8px, #FF9E5E 8px 10px); transition: width 0.6s; }
+
+.v-grind__layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 16px; }
+.v-grind h3 { margin: 0 0 10px; font-size: 11px; letter-spacing: 0.24em; color: var(--gold); }
+
+.v-grind__map {
+  padding: 14px;
+  border: 2px solid rgba(255, 200, 97, 0.35);
+  border-radius: 8px;
+  background: rgba(18, 8, 34, 0.7);
+  box-shadow: inset 0 0 0 4px rgba(0, 0, 0, 0.25);
+}
+.v-grind__map.is-flash { animation: grind-flash 0.7s ease; }
+@keyframes grind-flash { 30% { box-shadow: 0 0 0 4px var(--gold), 0 0 40px rgba(255, 200, 97, 0.6); } }
+.v-grind__map .demo { --d-accent: var(--gold); --d-on-accent: #2A1550; --d-chip: rgba(255, 255, 255, 0.1); font-family: var(--font-mono); }
+.v-grind__map .demo-grind__map { border-radius: 4px; background: #120C1F; }
+
+.v-grind__side { display: flex; flex-direction: column; gap: 16px; }
+.v-grind__panel { padding: 14px; border: 2px solid rgba(255, 200, 97, 0.25); border-radius: 8px; background: rgba(18, 8, 34, 0.55); }
+
+.v-grind__quests { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.v-grind__quests button {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: 12px/1.45 var(--font-mono);
+  text-align: left;
+}
+.v-grind__quests button:hover { background: rgba(255, 200, 97, 0.08); }
+.v-grind__check {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  margin-top: 1px;
+  border: 2px solid var(--gold);
+  border-radius: 2px;
+  color: #2A1550;
+  font-size: 11px;
+  font-weight: 800;
+}
+.is-done .v-grind__check { background: var(--gold); }
+.is-done span:nth-child(2) { text-decoration: line-through; opacity: 0.6; }
+.v-grind__xp { position: absolute; right: 8px; top: 6px; color: var(--gold); font-style: normal; font-weight: 700; animation: coin-pop 1s ease-out both; }
+
+.v-grind__inv { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; }
+.v-grind__inv li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 6px;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.25);
+  font-size: 10.5px;
+  text-align: center;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.v-grind__inv li:hover { transform: translateY(-3px); border-color: var(--gold); }
+.v-grind__item {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #5A2D8A, #3A1B5F);
+  color: var(--gold);
+  font-size: 15px;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.3);
+  animation: grind-bob 2.6s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.3s);
+}
+
+.v-grind__dialog {
+  position: relative;
+  width: 100%;
+  display: block;
+  margin-top: 16px;
+  padding: 20px 22px 18px;
+  border: 3px solid #F7EBD4;
+  border-radius: 8px;
+  background: rgba(12, 6, 26, 0.88);
+  box-shadow: inset 0 0 0 3px #3A1B5F;
+  color: #F7EBD4;
+  font: 13px/1.7 var(--font-mono);
+  text-align: left;
+}
+.v-grind__speaker {
+  position: absolute;
+  left: 18px;
+  top: -12px;
+  padding: 2px 10px;
+  border: 2px solid #F7EBD4;
+  border-radius: 4px;
+  background: #3A1B5F;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+}
+.v-grind__caret { display: inline-block; width: 8px; height: 14px; margin-left: 2px; vertical-align: -2px; background: var(--gold); animation: grind-blink 0.7s steps(2) infinite; }
+.v-grind__next { position: absolute; right: 16px; bottom: 8px; color: var(--gold); animation: grind-bob 1s ease-in-out infinite; }
+
+.v-grind__links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.v-grind__links a, .v-grind__links span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 2px dashed rgba(255, 200, 97, 0.5);
+  border-radius: 4px;
+  color: rgba(247, 235, 212, 0.75);
+  font-size: 12px;
+  text-decoration: none;
+}
+
+@container (max-width: 720px) {
+  .v-grind { padding: 48px 16px 20px; }
+  .v-grind__layout { grid-template-columns: minmax(0, 1fr); }
+}

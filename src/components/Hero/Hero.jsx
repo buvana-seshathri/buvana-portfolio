@@ -21,7 +21,7 @@ export default function Hero({ active = true }) {
           <i /><i /><i /><i />
         </div>
 
-        <div className="stage__canvas" aria-label="Photo carousel, drag to spin">
+        <div className="stage__canvas" aria-label="Photo carousel, drag to spin" data-cursor-label="drag">
           <Suspense fallback={null}>
             <PhotoCarousel active={active} />
           </Suspense>
