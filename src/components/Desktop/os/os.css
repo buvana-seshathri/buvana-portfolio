@@ -106,7 +106,7 @@
   transition: background-color 0.7s;
 }
 .os-wall.has-photo.is-receded .os-wall__shade { background-color: rgba(0, 0, 0, 0.34); }
-.os-wall.is-receded .os-word { opacity: 0.16; filter: blur(3px); scale: 0.92; }
+.os-wall.is-receded .os-word { opacity: 0.12; }
 
 /* the photo's credit, bottom-right, like the "about this picture" note on Windows */
 .os-wall__credit {
@@ -123,8 +123,8 @@
   animation: os-fade 0.6s 0.8s both;
 }
 
-/* the huge word: "PROJECTS" in big, faded block capitals, sitting quietly on the wallpaper so it's clear
-   which page this is. It leans a touch away from the cursor. */
+/* the huge word: "PROJECTS" in big, faded block capitals, sitting still on the wallpaper so it's clear
+   which page this is (it only fades back while a window is open). */
 .os-word {
   position: absolute;
   transform: translate(-50%, -50%);
@@ -141,8 +141,6 @@
   color: #fff;
   opacity: 0.32;
   text-shadow: 0 2px 30px rgba(0, 0, 0, 0.18);
-  transform: translate(calc(var(--mx, 0) * -8px), calc(var(--my, 0) * -5px));
-  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 /* the empty desktop catches clicks and right-clicks */

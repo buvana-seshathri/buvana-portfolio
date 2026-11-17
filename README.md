@@ -31,7 +31,7 @@ src/
     os/OS.jsx                the mac-style OS: windows, dock, menu bar, Spotlight, Control Center, Mission Control
     os/Window.jsx            a draggable / resizable / tiling window with traffic lights
     os/ProjectWindow.jsx     the two windows a project opens (photo + info); os/heroes.jsx the animated scenes
-    os/Dock.jsx, MenuBar.jsx, Spotlight.jsx, DesktopIcons.jsx (the icon grid), Wallpaper.jsx
+    os/Dock.jsx, MenuBar.jsx, Spotlight.jsx, DesktopIcons.jsx (unused since Nov 16: no desktop icons), Wallpaper.jsx
     os/DesktopCursor.jsx     the cursor inside the monitor
     os/glow.js               the wallpaper list (Unsplash photos) and their colors
     icons.jsx                app logos and system icons (original SVG)
@@ -76,8 +76,8 @@ the timeline is `site.journey`.
 
 The Projects page (`/#projects`) is a monitor on a desk running a mac-style desktop called buvana os.
 
-- **Projects on the desktop:** every project is an icon down the left side. Click one and two windows open beside
-  the icons (details across the top, photo overlapping it at the lower right): **name.png** (its screenshots, like Preview) and **Name · Info**
+- **Projects open from the dock:** the desktop has no icons, just "PROJECTS" in the middle (it stays still and fades back while a
+  window is open; the two project windows open centered). Click a project in the dock (or Spotlight / the Projects folder) and two windows open (details across the top, photo overlapping it at the lower right): **name.png** (its screenshots, like Preview) and **Name · Info**
   (name, tagline, type / status / stack and links, all animating in). Opening another project swaps the pair.
   On phones it's one window with the photo on top.
 - **Project screenshots:** drop them into `src/assets/projects/` named after the project's `id` from
@@ -90,6 +90,8 @@ The Projects page (`/#projects`) is a monitor on a desk running a mac-style desk
 - **Windows follow the page size:** when the browser resizes, open windows scale with the screen.
 - **Window text scales with the screen:** `--ui-scale` (set in `OS.jsx`, from 1 on a big monitor down to
   0.72) zooms everything inside window title bars and bodies, so small screens get smaller text.
+- **Project links:** `links: { site, siteLabel, code }` on each project in `site.js`. `siteLabel` names the main
+  button (e.g. "chrome web store"); without it the button says "live site".
 - **Add or edit a project:** add an entry to `site.projects` in `src/content/site.js` (name, type, status,
   tagline, summary, points, stack, links, accent, view). It shows up on the desktop, in the dock,
   Spotlight and the Projects folder. Keep the tagline to one line and the summary to two sentences. Give it a logo in `LOGOS` in `components/Desktop/icons.jsx` and a scene in

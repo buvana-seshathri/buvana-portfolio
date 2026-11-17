@@ -4,7 +4,6 @@ import Window, { placed } from './Window.jsx';
 import Dock from './Dock.jsx';
 import MenuBar, { MenuList } from './MenuBar.jsx';
 import Spotlight from './Spotlight.jsx';
-import DesktopIcons from './DesktopIcons.jsx';
 import Wallpaper from './Wallpaper.jsx';
 import DesktopCursor from './DesktopCursor.jsx';
 import { InfoView, PhotoView, photoName } from './ProjectWindow.jsx';
@@ -185,16 +184,18 @@ export default function OS({ active, current, sceneRef }) {
             if (found) return rest.map((x) => (x.key === k ? { ...x, z: zTop.current, min: false, closing: false } : x));
             return [...rest, { key: k, x: 0, y: work.y, w: work.w, h: work.h, mode: 'normal', z: zTop.current, min: false }];
           }
-          // placed like her reference: the Info window wide across the top-middle, the photo window
-          // lower-right, overlapping its corner (fractions of the screen, measured from her screenshot)
-          const iconCols = Math.ceil((projects.length + 3) / Math.max(2, Math.floor((work.h - 12) / (iconSize + 42))));
-          const left = 10 + iconCols * (iconSize + 40) + 10;
+          // the pair sits centered on the screen: the Info window wide across the top, the photo window
+          // lower-right, overlapping its corner (proportions measured from her reference screenshot)
           const W = work.w;
           const H = work.h;
-          const ix = Math.max(left, W * 0.23);
+          const infoW = Math.max(380, W * 0.42);
+          const photoW = W * 0.43;
+          const offset = W * 0.3; // how far right of the Info window the photo window starts
+          const total = Math.max(infoW, offset + photoW);
+          const L = Math.max(8, (W - total) / 2);
           const rects = {
-            [`info:${id}`]: { x: ix, y: work.y + H * 0.045, w: Math.max(380, W * 0.65 - ix), h: Math.max(300, H * 0.55) },
-            [`photo:${id}`]: { x: W * 0.53, y: work.y + H * 0.36, w: Math.min(W * 0.43, W - W * 0.53 - 8), h: H * 0.58 },
+            [`info:${id}`]: { x: L, y: work.y + H * 0.05, w: infoW, h: Math.max(300, H * 0.55) },
+            [`photo:${id}`]: { x: L + offset, y: work.y + H * 0.37, w: photoW, h: H * 0.56 },
           };
           let out = rest;
           [`info:${id}`, `photo:${id}`].forEach((k) => {
@@ -214,9 +215,7 @@ export default function OS({ active, current, sceneRef }) {
         if (found) return ws.map((x) => (x.key === key ? { ...x, z: zTop.current, min: false, closing: false } : x));
         const [dw, dh] = apps[key].size;
         const n = ws.length % 5;
-        // keep windows clear of the icon columns on the left when there's room
-        const iconCols = Math.ceil((projects.length + 3) / Math.max(2, Math.floor((work.h - 12) / (iconSize + 42))));
-        const left = Math.min(10 + iconCols * (iconSize + 40) + 8, work.w * 0.3);
+        const left = 10;
         const w = Math.min(dw, work.w - left - 10, work.w * 0.94);
         const h = Math.min(dh, work.h * 0.96);
         const x = Math.max(left, Math.min(work.w - w - 6, left + (work.w - left - w) / 2 + (n - 2) * 28));
@@ -428,7 +427,7 @@ export default function OS({ active, current, sceneRef }) {
       ...ctxAt(e),
       items: [
         { label: 'Open', action: () => open(`project:${p.id}`) },
-        ...(p.links.site ? [{ label: 'Open Live Site', action: () => window.open(p.links.site, '_blank', 'noopener') }] : []),
+        ...(p.links.site ? [{ label: p.links.siteLabel ? `Open ${p.links.siteLabel}` : 'Open Live Site', action: () => window.open(p.links.site, '_blank', 'noopener') }] : []),
         ...(p.links.code ? [{ label: 'View Code', action: () => window.open(p.links.code, '_blank', 'noopener') }] : []),
         { sep: true },
         { label: 'Show in Finder', action: () => open('finder') },
@@ -486,8 +485,6 @@ export default function OS({ active, current, sceneRef }) {
       items: [
         { label: 'Undo', shortcut: '⌘Z', disabled: true },
         { label: 'Redo', shortcut: '⇧⌘Z', disabled: true },
-        { sep: true },
-        { label: 'Select All Icons', shortcut: '⌘A', action: () => setSelected(new Set(systemIcons.map((i) => i.key))) },
       ],
     },
     {
@@ -587,12 +584,8 @@ export default function OS({ active, current, sceneRef }) {
   }, [mc, wins, size, MB, dockReserve, work, mobile]);
 
   const wp = { ...WALLPAPERS[wall], ...samples[wall] };
-  // the big word sits in the open space right of the icon columns
-  const iconRows = Math.max(2, Math.floor((work.h - 12) / (iconSize + 42)));
-  const iconsRight = 10 + Math.ceil(systemIcons.length / iconRows) * (iconSize + 40);
-  const wordAt = mobile
-    ? { x: size.w / 2, y: work.y + work.h * 0.62 }
-    : { x: iconsRight + (size.w - iconsRight) / 2, y: work.y + work.h * 0.5 };
+  // no desktop icons: the big word sits in the middle and everything opens from the dock
+  const wordAt = { x: size.w / 2, y: work.y + work.h * 0.5 };
   const cursorAccent = accent || wp.text[1];
 
   return (
@@ -606,7 +599,7 @@ export default function OS({ active, current, sceneRef }) {
       }}
       onPointerDownCapture={onScreenDown}
     >
-      <Wallpaper wp={wp} word={desktop.wallpaperWord} tint={accent} center={wordAt} />
+      <Wallpaper wp={wp} word={desktop.wallpaperWord} tint={accent} center={wordAt} receded={visible.length > 0} />
 
       <div
         className="os-desk"
@@ -618,19 +611,6 @@ export default function OS({ active, current, sceneRef }) {
         onContextMenu={onDesktopContext}
       />
 
-      <DesktopIcons
-        items={systemIcons}
-        size={size}
-        work={work}
-        mobile={mobile}
-        iconSize={iconSize}
-        selected={selected}
-        active={front?.project ? `project:${front.project.id}` : null}
-        onSelect={selectIcon}
-        onClick={clickIcon}
-        onOpen={openIcon}
-        onContext={onIconContext}
-      />
 
       {mc && <div className="os-mc" onPointerDown={() => setMc(false)} aria-hidden="true" />}
 

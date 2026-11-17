@@ -145,9 +145,9 @@ function DetailsTab({ project: p, challenge, index, total }) {
         </dl>
         <div className="pw-actions">
           {p.links.site ? (
-            <a className="is-main" href={p.links.site} target="_blank" rel="noreferrer" data-cursor-label="live site">live site <span>↗</span></a>
+            <a className="is-main" href={p.links.site} target="_blank" rel="noreferrer" data-cursor-label={p.links.siteLabel || 'live site'}>{p.links.siteLabel || 'live site'} <span>↗</span></a>
           ) : (
-            <span className="is-off">live link soon</span>
+            !p.links.code && <span className="is-off">live link soon</span>
           )}
           {p.links.code && <a href={p.links.code} target="_blank" rel="noreferrer" data-cursor-label="source">source <span>↗</span></a>}
         </div>

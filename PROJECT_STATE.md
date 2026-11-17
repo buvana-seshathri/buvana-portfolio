@@ -100,7 +100,16 @@ Design notes live in Notion: https://app.notion.com/p/portfolio-design-notes-403
      the old CSS palettes (Nebula, Lagoon, Ember) are the fallback. The **huge lowercase "projects"** (Fraunces
      italic, rippling gradient letters, outline echo, leans away from the cursor) sits above the shelf and
      fades back while inspecting. No caption pill (removed Nov 9).
-   - **Desktop icons + project windows** (Nov 10; replaced the info panel that slid in on the right): every
+   - **Nov 16: desktop icons removed** (she asked): the desktop is just "PROJECTS" centered (faded/blurred
+     while any window is open); projects open from the dock, Spotlight or the Projects folder. Window pair
+     placement no longer reserves room for icon columns. Welcome note + readme now point at the dock.
+   - **Nov 16 (later):** the window pair is centered on the screen (Info top-left of center, photo lower-right
+     overlapping it). "PROJECTS" no longer moves (no cursor lean, no scale/blur); it only fades while a window
+     is open. Links she gave: Telly = Chrome Web Store (button "chrome web store", `links.siteLabel`) + GitHub
+     buvana-seshathri/telly; SmartDesk = GitHub buvana-seshathri/SmartDesk; ephemera = buvi-ephemera.netlify.app
+     + GitHub buvana-seshathri/ephemera; 30 Days = https://lnkd.in/p/ghYU2xe3 (button "see all 30"); wifi2sat
+     has NO link (she asked to remove it). Never open the lnkd.in link (LinkedIn rule).
+   - (older) **Desktop icons + project windows** (Nov 10; replaced the info panel that slid in on the right): every
      project is a normal-size desktop icon (40–52px) in a mac-style grid down the LEFT side (columns top to
      bottom: the 6 projects, then Projects folder, readme.txt, Resume.pdf; orbit/constellation layouts are gone);
      phones: a home-screen grid along the top. **One click** on a project (or its dock icon, Spotlight, Finder)
@@ -194,6 +203,13 @@ Fonts: Fraunces (display), Instrument Sans (body), JetBrains Mono (labels). The 
 mac font (-apple-system / SF Pro) where available, falling back to Instrument Sans.
 
 ## Not saved here (binary files)
+**ZIP RULE (Nov 16, she asked):** never put photos in the zip she gets. She has her real images set up locally
+and unzipping must not overwrite them. Zip with:
+`zip -qr buvana-portfolio.zip buvana-portfolio -x "buvana-portfolio/node_modules/*" "buvana-portfolio/dist/*" "*.jpg" "*.jpeg" "*.png" "*.webp" "*.avif" "*.gif" "*.heic"`
+**WARNING (Nov 15):** Project docs hold text only, so a workspace rebuilt from them has NO real photos. The
+session that started Nov 3 had stand-ins (plain ovals for both plush dolls, a flat navy rectangle for the
+About photo) and shipped them in its zips without noticing; Buvana caught it. Before zipping, open each image
+and confirm it's the real one; if it's a stand-in, ask her for the originals (or her last good zip) first.
 - `src/assets/carousel/1.jpg` ... `8.jpg`: placeholder photos (numbered blue/purple gradients, 1200×900).
   Buvana will drop her own in. If they're missing when rebuilding, regenerate simple numbered gradients.
 - `src/assets/about/photo.jpg`: the graduation photo (1100×1956 jpg).

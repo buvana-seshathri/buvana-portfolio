@@ -68,24 +68,22 @@ export const site = {
     user: 'Buvana Seshathri',
     // the huge word on the wallpaper (lowercase, like every big Fraunces heading)
     wallpaperWord: 'projects',
-    // the little handwritten note under it (an arrow points from it toward the apps)
     notification: {
       title: 'Welcome to buvana os',
-      body: 'Every app on this desktop is something I built. Click one to see what it is.',
-      touchBody: 'Every app on this desktop is something I built. Tap one to see what it is.',
+      body: 'Every app in the dock is something I built. Click one to see what it is.',
+      touchBody: 'Every app in the dock is something I built. Tap one to see what it is.',
     },
     resume: '/resume.pdf',
     // readme.txt, opened in TextEdit
     readme: [
       'hi, welcome to my desktop!',
       '',
-      'Every app on the left of this desktop is something I built.',
-      'Click one to open it: its window has two tabs, a photo',
-      'of the project and the details about it.',
+      'Every app in the dock at the bottom is something I built.',
+      'Click one to open it: two windows pop up, a photo of',
+      'the project and the details about it.',
       '',
       'Spotlight (⌘ Space or Ctrl Space) finds anything.',
-      'The Control Center in the top-right changes the',
-      'wallpaper and the monitor lights.',
+      'Right-click the desktop for a new wallpaper.',
       '',
       'Have fun poking around.',
       '- buvana',
@@ -129,7 +127,7 @@ export const site = {
         'Letters to your future self',
       ],
       stack: ['Web app', 'Google Drive sync', 'Netlify'],
-      links: { site: 'https://buvi-ephemera.netlify.app', code: null },
+      links: { site: 'https://buvi-ephemera.netlify.app/', code: 'https://github.com/buvana-seshathri/ephemera' },
       view: 'ephemera',
     },
     {
@@ -147,7 +145,11 @@ export const site = {
         'Optional bring-your-own-key LLM',
       ],
       stack: ['Chrome MV3', 'TMDB', 'LLM (optional)'],
-      links: { site: 'https://buvana-seshathri.github.io/telly', code: null },
+      links: {
+        site: 'https://chromewebstore.google.com/detail/telly-what-to-watch-with/mmablnnflcmkhmddmokfkpnfhepionml?hl=en',
+        siteLabel: 'chrome web store',
+        code: 'https://github.com/buvana-seshathri/telly',
+      },
       view: 'telly',
     },
     {
@@ -165,7 +167,7 @@ export const site = {
         'Inspired by triaging the ticket queue at Zoho',
       ],
       stack: ['ChromaDB', 'Embeddings', 'Human review'],
-      links: { site: null, code: null },
+      links: { site: null, code: 'https://github.com/buvana-seshathri/SmartDesk' },
       view: 'smartdesk',
     },
     {
@@ -179,7 +181,7 @@ export const site = {
         'A team project on cross-modal transfer learning: a model learns gesture recognition from WiFi signals, then classifies the same gestures from GNSS satellite signals.',
       points: ['Transfer learning across signal types', 'WiFi → GNSS gesture recognition'],
       stack: ['Transfer learning', 'WiFi signals', 'GNSS'],
-      links: { site: null, code: 'https://github.com/TusharW4ni/wifi2sat' },
+      links: { site: null, code: null },
       view: 'wifi2sat',
     },
     {
@@ -193,7 +195,7 @@ export const site = {
       summary: 'Shipped a small project every day for thirty days, and finished all thirty.',
       points: [],
       stack: [],
-      links: { site: null, code: null },
+      links: { site: 'https://lnkd.in/p/ghYU2xe3', siteLabel: 'see all 30', code: null },
       view: 'challenge',
     },
   ],
