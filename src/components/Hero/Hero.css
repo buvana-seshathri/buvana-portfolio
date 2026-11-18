@@ -116,6 +116,7 @@
   color: var(--stage-text-faint);
 }
 
+/* plain headline: one weight, one style, no highlighted word */
 .headline {
   margin: 0 0 22px;
   font-family: var(--font-display);
@@ -128,42 +129,6 @@
 }
 
 .headline > span { display: block; }
-
-.headline em {
-  position: relative;
-  display: inline-block;
-  font-style: italic;
-  font-weight: 450;
-  padding-right: 0.06em;
-  font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
-}
-
-/* the electric highlight under "build" */
-.headline em::after {
-  content: "";
-  position: absolute;
-  left: -0.02em;
-  right: 0.04em;
-  bottom: 0.08em;
-  height: 0.15em;
-  z-index: -1;
-  border-radius: 2px;
-  background: linear-gradient(90deg in oklab, rgba(76, 98, 245, 0.85), rgba(109, 74, 224, 0.85));
-  transform-origin: left;
-}
-
-/* draws itself in each time the hero page opens */
-.page.is-current .headline em::after {
-  animation: underline 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.9s both;
-}
-.page.is-entering .headline em::after { animation-delay: 1.35s; }
-
-html:not([data-loaded]) .headline em::after { animation-play-state: paused; }
-
-@keyframes underline {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
 
 .lede {
   margin: 0 0 30px;

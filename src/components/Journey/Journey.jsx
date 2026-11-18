@@ -31,8 +31,7 @@ export default function Journey() {
       <div className="journey__wrap">
         <div className="journey__main">
           <h2 id="journey-heading" className="journey__heading rise" style={{ '--d': '0.05s' }}>
-            {journey.heading.before}
-            <em>{journey.heading.emphasis}</em>
+            {journey.heading}
           </h2>
           <p className="journey__lede rise" style={{ '--d': '0.12s' }}>{journey.lede}</p>
 

@@ -162,4 +162,3 @@
   20% { opacity: 1; }
   100% { opacity: 0; transform: translate(var(--hx), -90px) scale(1) rotate(12deg); }
 }
-

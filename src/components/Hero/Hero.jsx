@@ -35,13 +35,10 @@ export default function Hero({ active = true }) {
 
           <div className="stage__copy">
             <p className="eyebrow rise" style={{ '--d': '0.15s' }}>{hero.eyebrow}</p>
+            {/* plain headline: no highlighted or italic word */}
             <h1 className="headline">
               <span className="rise" style={{ '--d': '0.25s' }}>{hero.greeting}</span>
-              <span className="rise" style={{ '--d': '0.38s' }}>
-                {hero.tagline.before}
-                <em>{hero.tagline.emphasis}</em>
-                {hero.tagline.after}
-              </span>
+              <span className="rise" style={{ '--d': '0.38s' }}>{hero.tagline}</span>
             </h1>
             <p className="lede rise" style={{ '--d': '0.52s' }}>
               {hero.lede.map((line) => <span key={line}>{line}</span>)}

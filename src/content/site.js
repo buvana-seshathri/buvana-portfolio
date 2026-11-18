@@ -1,18 +1,19 @@
 // All copy lives here so it can be edited without touching components.
 // Carousel photos are not listed here: any image in src/assets/carousel/ shows up automatically.
+// Headings are plain text: no highlighted or italic words (Nov 17).
 export const site = {
   name: 'buvana',
   fullName: 'buvana seshathri',
   nav: [
     { label: 'about', href: '#about' },
+    { label: 'experience', href: '#journey' },
     { label: 'projects', href: '#projects' },
-    { label: 'research', href: '#research' },
     { label: 'contact', href: '#contact' },
   ],
   hero: {
     eyebrow: 'software engineer · ai / ml',
     greeting: "hi, i'm buvana,",
-    tagline: { before: 'i ', emphasis: 'build', after: ' worlds.' },
+    tagline: 'i build worlds.',
     lede: [
       'i coax stubborn little ideas into worlds you can wander,',
       'some made of play, some of quiet machinery.',
@@ -26,8 +27,8 @@ export const site = {
   },
   // The photo is src/assets/about/photo.jpg (swap the file to change it).
   about: {
-    // big Fraunces heading stays lowercase; the word in `emphasis` gets the highlight
-    heading: { before: 'a bit about ', emphasis: 'me.' },
+    // big Fraunces heading stays lowercase
+    heading: 'a bit about me.',
     photoAlt: 'Buvana in her graduation gown and orange stole, holding her cap, on the UT Dallas campus',
     card: {
       file: 'about-me.md',
@@ -47,7 +48,7 @@ export const site = {
 
   // The Journey page: a compact timeline (just what happened), oldest first; `now: true` marks the live dot.
   journey: {
-    heading: { before: 'the story ', emphasis: 'so far.' },
+    heading: 'the story so far.',
     lede: 'From Chennai to Dallas, one build at a time.',
     steps: [
       { when: '2019 – 2023', title: 'B.E. Computer Science', org: 'Sri Sairam Engineering College' },
@@ -206,5 +207,41 @@ export const site = {
     total: 30,
     completed: true,
     days: [],
+  },
+
+  // The Contact page: write a letter (it's emailed to her), or find her on LinkedIn / GitHub.
+  contact: {
+    heading: "let's talk.",
+    lede: 'Hiring, building something, or just want to say hi? Write me a letter and it lands straight in my inbox.',
+    to: 'Buvana Seshathri',
+    // The form sends through Web3Forms (free, no account, no server). Get a key at https://web3forms.com
+    // (enter the email the letters should go to; the key arrives by email) and paste it between the quotes
+    // below. The key is meant to be public, so it's fine in the code. (Or put VITE_WEB3FORMS_KEY=... in a
+    // .env.local file / your host's environment settings instead.)
+    // Until a key is set, "seal & send" opens the visitor's own email app with the letter filled in.
+    web3formsKey: '' || import.meta.env.VITE_WEB3FORMS_KEY || '',
+    email: 'buvanasesha2002@gmail.com',
+    // the little status tiles next to the heading
+    status: 'Open to new roles',
+    resume: '/resume.pdf',
+    topics: ['a role for you', 'a project idea', 'a collab', 'just saying hi'],
+    placeholder: 'Dear Buvana,\n\n',
+    send: 'seal & send',
+    sent: {
+      title: 'delivered!',
+      body: "Your letter is in my inbox. I'll write back soon.",
+      signature: 'buvana',
+      again: 'write another',
+    },
+    error: "The post office hiccuped and the letter didn't go out. Try once more, or write to me directly.",
+    elsewhere: 'or find me here',
+    // postage stamps; a stamp without a link shows as "soon"
+    stamps: [
+      { id: 'linkedin', label: 'LinkedIn', note: 'connect', href: 'https://www.linkedin.com/in/buvanaseshathri/' },
+      { id: 'github', label: 'GitHub', note: 'see my code', href: 'https://github.com/buvana-seshathri' },
+      { id: 'email', label: 'Email', note: 'copy email' },
+    ],
+    // "hello" in a few languages, scrolling along the bottom of the page forever
+    hellos: ['hello', 'வணக்கம்', 'hola', 'bonjour', 'नमस्ते', 'こんにちは', '안녕하세요', 'ciao', 'olá', 'hallo', 'merhaba', '你好'],
   },
 };

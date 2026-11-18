@@ -127,7 +127,7 @@ function DetailsTab({ project: p, challenge, index, total }) {
         </div>
         <h2 className={`pw-name${p.name.length > 14 ? ' is-long' : ''}`} aria-label={p.name}>
           {[...p.name].map((ch, i) => (
-            <span key={i} aria-hidden="true" style={{ '--i': i }}>{ch === ' ' ? ' ' : ch}</span>
+            <span key={i} aria-hidden="true" style={{ '--i': i }}>{ch === ' ' ? ' ' : ch}</span>
           ))}
         </h2>
         <p className="pw-line"><Decode text={p.tagline} delay={0.35} /></p>

@@ -38,11 +38,10 @@ export default function About() {
       </div>
 
       <div className="about__wrap">
-        {/* ---------- heading ---------- */}
-          <h2 id="about-heading" className="about__heading rise" style={{ '--d': '0.1s' }}>
-            {about.heading.before}
-            <em>{about.heading.emphasis}</em>
-          </h2>
+        {/* ---------- heading (plain, no highlighted word) ---------- */}
+        <h2 id="about-heading" className="about__heading rise" style={{ '--d': '0.1s' }}>
+          {about.heading}
+        </h2>
 
         {/* ---------- doll | intro | photo, all the same height, sitting on one line ---------- */}
         <div className="about__plush-spot">
@@ -57,30 +56,30 @@ export default function About() {
           />
         </div>
 
-          <article className="about__card rise" style={{ '--d': '0.22s' }}>
-            <header className="about__card-bar">
-              <i aria-hidden="true" /><i aria-hidden="true" /><i aria-hidden="true" />
-              <span className="about__card-file">{card.file}</span>
-            </header>
-            <div className="about__card-body">
-              <h3 className="about__name">
-                <span>{card.title}</span>
-                <i className="about__caret" aria-hidden="true" />
-              </h3>
-              {card.body.map((p) => <p key={p}>{p}</p>)}
-            </div>
-            <footer className="about__card-foot">
-              <p className="about__signature">
-                {card.signature} <Heart />
-              </p>
-              {card.status && (
-                <span className="about__status">
-                  <i aria-hidden="true" />
-                  {card.status}
-                </span>
-              )}
-            </footer>
-          </article>
+        <article className="about__card rise" style={{ '--d': '0.22s' }}>
+          <header className="about__card-bar">
+            <i aria-hidden="true" /><i aria-hidden="true" /><i aria-hidden="true" />
+            <span className="about__card-file">{card.file}</span>
+          </header>
+          <div className="about__card-body">
+            <h3 className="about__name">
+              <span>{card.title}</span>
+              <i className="about__caret" aria-hidden="true" />
+            </h3>
+            {card.body.map((p) => <p key={p}>{p}</p>)}
+          </div>
+          <footer className="about__card-foot">
+            <p className="about__signature">
+              {card.signature} <Heart />
+            </p>
+            {card.status && (
+              <span className="about__status">
+                <i aria-hidden="true" />
+                {card.status}
+              </span>
+            )}
+          </footer>
+        </article>
 
         {/* ---------- small photo ---------- */}
         <div className="about__media rise" style={{ '--d': '0.3s' }}>

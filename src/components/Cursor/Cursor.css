@@ -1,21 +1,64 @@
-/* The site cursor: a small dot with a thin circle around it that trails a beat behind.
-   White with mix-blend-mode: difference, so it inverts against anything underneath. */
-html.has-tech-cursor,
-html.has-tech-cursor * { cursor: none !important; }
+/* The site cursor: a small, flat, rounded pointer in the theme colors (see Cursor.jsx).
+   Its tip sits exactly on the pointer. Over text fields the browser's text cursor shows instead. */
+html.has-3d-cursor,
+html.has-3d-cursor * { cursor: none !important; }
+html.has-3d-cursor :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="submit"]):not([type="button"]), textarea, [contenteditable="true"]) {
+  cursor: text !important;
+}
 
-.tc { position: fixed; inset: 0; z-index: 10000; pointer-events: none; mix-blend-mode: difference; opacity: 0; transition: opacity 0.2s; }
-.tc.is-shown { opacity: 1; }
-.tc > * { position: absolute; left: 0; top: 0; width: 0; height: 0; will-change: transform; }
+.c3d { position: fixed; inset: 0; z-index: 10000; pointer-events: none; opacity: 0; transition: opacity 0.15s; }
+.c3d.is-shown { opacity: 1; }
 
-.tc__dot i,
-.tc__ring i { position: absolute; border-radius: 50%; transition: transform 0.25s cubic-bezier(0.3, 1.4, 0.5, 1), background-color 0.2s, opacity 0.2s; }
+.c3d__tip { position: absolute; left: 0; top: 0; width: 0; height: 0; will-change: transform; }
 
-.tc__dot i { left: -3px; top: -3px; width: 6px; height: 6px; background: #fff; }
-.tc__ring i { left: -16px; top: -16px; width: 32px; height: 32px; border: 1.5px solid #fff; opacity: 0.85; }
+/* the arrow leans around its tip */
+.c3d__tilt {
+  position: absolute;
+  left: -2px;
+  top: -2px;
+  width: 20px;
+  height: 20px;
+  transform-origin: 2px 2px;
+  will-change: transform;
+}
 
-/* over something clickable: the circle grows and fills faintly, the dot shrinks */
-.tc.is-hover .tc__ring i { transform: scale(1.45); background-color: rgba(255, 255, 255, 0.12); }
-.tc.is-hover .tc__dot i { transform: scale(0.6); }
-/* pressing squeezes the circle in */
-.tc.is-down .tc__ring i { transform: scale(0.75); }
-.tc.is-hover.is-down .tc__ring i { transform: scale(1.15); }
+.c3d__arrow {
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 2px 3px rgba(48, 44, 131, 0.25));
+  transform-origin: 2px 2px;
+  transition: transform 0.22s cubic-bezier(0.3, 1.6, 0.5, 1), filter 0.22s;
+}
+
+.c3d__face { transition: transform 0.14s cubic-bezier(0.3, 1.4, 0.5, 1); }
+.c3d__hot { opacity: 0; transition: opacity 0.18s; }
+
+/* over something clickable: a touch bigger and a deeper blue */
+.c3d.is-hover .c3d__arrow {
+  transform: scale(1.1);
+}
+.c3d.is-hover .c3d__hot { opacity: 1; }
+
+/* click: a small squeeze */
+.c3d.is-down .c3d__arrow { transform: scale(0.9); }
+
+/* a small label next to it for big draggable things (data-cursor-label) */
+.c3d__label {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  padding: 5px 10px 6px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, var(--c-blueberry), var(--c-electric));
+  box-shadow: 0 6px 14px -6px rgba(48, 44, 131, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  font: 600 10px/1 var(--font-mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #fff;
+  opacity: 0;
+  transform: scale(0.6);
+  transform-origin: 0 0;
+  transition: opacity 0.18s, transform 0.25s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.c3d.has-label .c3d__label { opacity: 1; transform: none; }

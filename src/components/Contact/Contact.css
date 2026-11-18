@@ -1,0 +1,767 @@
+/* Contact page: a blue page again (alternating with the white pages), with an always-moving aurora in blues
+   and fine grain, and "hello" in many languages scrolling along a thin band at the bottom.
+   Left: "let's talk.", frosted-glass tiles (status, resume) and postage stamps. Right: the
+   letter (paper). Sending folds the letter into an envelope, seals it and flies it away. */
+
+.contact {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  padding-block: calc(84px + env(safe-area-inset-top, 0px)) calc(60px + env(safe-area-inset-bottom, 0px));
+  padding-left: max(24px, env(safe-area-inset-left, 0px));
+  padding-right: max(24px, env(safe-area-inset-right, 0px));
+  transition: --px 0.9s cubic-bezier(0.2, 0.8, 0.2, 1), --py 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+  background: linear-gradient(135deg in oklab, #DCE5FF 0%, #E3E9FF 50%, #D6E6FF 100%);
+}
+
+/* ---------- the always-moving aurora ---------- */
+.aurora { position: absolute; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; }
+.aurora::after {
+  /* fine grain, so the color reads like a printed material instead of flat digital gradient */
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.aurora i {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  will-change: transform;
+}
+.aurora i:nth-child(1) { width: 52vw; height: 52vw; left: -14vw; top: -18vw; background: #4C62F5; opacity: 0.38; animation: aurora-a 26s ease-in-out infinite; }
+.aurora i:nth-child(2) { width: 44vw; height: 44vw; right: -12vw; top: -10vw; background: #819BFF; opacity: 0.5; animation: aurora-b 32s ease-in-out infinite; }
+.aurora i:nth-child(3) { width: 46vw; height: 46vw; right: 4vw; bottom: -24vw; background: #A9B6FF; opacity: 0.5; animation: aurora-c 28s ease-in-out infinite; }
+.aurora i:nth-child(4) { width: 34vw; height: 34vw; left: 18vw; bottom: -16vw; background: #8FD0FF; opacity: 0.45; animation: aurora-d 36s ease-in-out infinite; }
+@keyframes aurora-a { 0%, 100% { transform: translate(0, 0) scale(1); } 33% { transform: translate(14vw, 10vh) scale(1.15); } 66% { transform: translate(4vw, 26vh) scale(0.9); } }
+@keyframes aurora-b { 0%, 100% { transform: translate(0, 0) scale(1); } 40% { transform: translate(-18vw, 18vh) scale(1.1); } 75% { transform: translate(-6vw, -4vh) scale(0.92); } }
+@keyframes aurora-c { 0%, 100% { transform: translate(0, 0) scale(1); } 35% { transform: translate(-22vw, -12vh) scale(1.12); } 70% { transform: translate(6vw, -20vh) scale(0.95); } }
+@keyframes aurora-d { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(26vw, -18vh) scale(1.2); } }
+
+/* ---------- frosted glass: the tiles, the stamp tray, the hello band ---------- */
+.contact__tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  max-width: 24rem;
+  margin: 0 0 clamp(22px, 4vh, 36px);
+}
+.tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.28));
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 18px 34px -22px rgba(48, 44, 131, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(18px) saturate(170%);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  text-decoration: none;
+  color: var(--page-text);
+  overflow: hidden;
+}
+/* a slow sheen sliding across the glass */
+.tile::after {
+  content: "";
+  position: absolute;
+  inset: -40% -60%;
+  background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.55) 50%, transparent 60%);
+  animation: glass-sheen 7s ease-in-out infinite;
+  pointer-events: none;
+}
+.tile:nth-child(2)::after { animation-delay: -2.3s; }
+@keyframes glass-sheen { 0%, 55% { transform: translateX(-60%); } 100% { transform: translateX(60%); } }
+.tile__key {
+  font: 10px/1 var(--font-mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--page-text-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tile__val {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.tile__live {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #34D399;
+  box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.6);
+  animation: tile-live 2s ease-out infinite;
+}
+@keyframes tile-live { 70% { box-shadow: 0 0 0 8px rgba(52, 211, 153, 0); } 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); } }
+.tile__time { font-variant-numeric: tabular-nums; }
+.tile__secs { color: var(--accent); }
+.tile--link { transition: transform 0.25s cubic-bezier(0.3, 1.6, 0.5, 1), background 0.2s; }
+.tile--link:hover { transform: translateY(-3px); background: linear-gradient(150deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.45)); }
+.tile--link .tile__val span { transition: transform 0.2s; }
+.tile--link:hover .tile__val span { transform: translate(2px, -2px); }
+
+/* "hello" in many languages along the bottom: a glass band that never stops drifting */
+.hellos {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.35);
+  border-top: 1px solid rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px) saturate(170%);
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
+  pointer-events: none;
+}
+.hellos__track { display: flex; width: max-content; animation: hellos-drift 48s linear infinite; }
+.hellos__set { display: flex; }
+.hellos__set > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  padding-right: 18px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: var(--page-text);
+}
+.hellos__set i { font-style: normal; font-size: 8px; color: var(--c-blueberry); }
+@keyframes hellos-drift { to { transform: translateX(-50%); } }
+
+.contact__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+.contact__wrap {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 540px);
+  grid-template-areas: "intro desk";
+  align-items: center;
+  column-gap: clamp(40px, 6vw, 96px);
+}
+
+/* ---------- left: heading, lede, glass tiles, stamps ---------- */
+.contact__intro { grid-area: intro; min-width: 0; display: flex; flex-direction: column; }
+
+/* plain heading: one weight, one style, no highlighted word */
+.contact__heading {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.75rem, min(5vw, 8.5vh), 5.25rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+  font-variation-settings: "opsz" 144, "SOFT" 30;
+  color: var(--page-text);
+}
+
+.contact__lede {
+  max-width: 30rem;
+  margin: 0 0 clamp(26px, 5vh, 48px);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--page-text-soft);
+}
+
+.contact__label {
+  margin: 0 0 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--page-text-soft);
+}
+
+.contact__stamps { display: flex; padding: 6px 0 4px 4px; }
+
+/* ---------- postage stamps ---------- */
+.stamp {
+  --stamp-bg: #F0F4FF;
+  --stamp-cut: #819BFF;
+  --stamp-art: linear-gradient(150deg, #C6D5FF, #819BFF);
+  --stamp-ink: #fff;
+  --sx: 0;
+  --sy: 0;
+  --r: -5deg;
+  position: relative;
+  display: block;
+  flex: none;
+  width: 108px;
+  margin-right: -10px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-decoration: none;
+  color: var(--page-text);
+  filter: drop-shadow(0 10px 12px rgba(48, 44, 131, 0.22)) drop-shadow(0 1px 1px rgba(48, 44, 131, 0.18));
+  transform: perspective(500px) rotate(var(--r)) rotateX(calc(var(--sy) * -16deg)) rotateY(calc(var(--sx) * 16deg));
+  transition: transform 0.35s cubic-bezier(0.3, 1.5, 0.5, 1), filter 0.3s;
+}
+.stamp:nth-child(2) { --r: 4deg; margin-top: 10px; }
+.stamp:nth-child(3) { --r: -2deg; }
+
+.stamp:not(.is-off):hover,
+.stamp:not(.is-off):focus-visible {
+  z-index: 2;
+  transform: perspective(500px) translateY(-8px) rotate(calc(var(--r) * 0.4)) scale(1.06) rotateX(calc(var(--sy) * -16deg)) rotateY(calc(var(--sx) * 16deg));
+  filter: drop-shadow(0 18px 18px rgba(48, 44, 131, 0.28)) drop-shadow(0 1px 1px rgba(48, 44, 131, 0.18));
+}
+.stamp:active { transition-duration: 0.1s; }
+
+.stamp--github { --stamp-bg: #FFFFFF; --stamp-art: linear-gradient(150deg, #4C62F5, #302C83); --stamp-cut: #3A3AA8; }
+.stamp--email { --stamp-bg: #FFF4F9; --stamp-art: linear-gradient(150deg, #FBE3F0, #E2DCFB 60%, #C9B8F5); --stamp-cut: #D7C6F7; --stamp-ink: #302C83; }
+
+/* the paper with perforated edges: holes punched all round a 6px border */
+.stamp__paper {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 11px 11px 9px;
+  background: var(--stamp-bg);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    radial-gradient(circle 3.4px, #0000 97%, #000) -6px -6px / 12px 12px round;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    radial-gradient(circle 3.4px, #0000 97%, #000) -6px -6px / 12px 12px round;
+  -webkit-mask-composite: source-over;
+}
+
+.stamp__art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 78px;
+  border-radius: 3px;
+  background: var(--stamp-art);
+  box-shadow: inset 0 0 0 3px var(--stamp-bg), inset 0 0 0 4px rgba(48, 44, 131, 0.12);
+  color: var(--stamp-ink);
+  overflow: hidden;
+}
+/* a soft shine across the picture */
+.stamp__art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.45) 45%, transparent 60%);
+  transform: translateX(calc(-60% + var(--sx) * 50%));
+  transition: transform 0.3s;
+}
+.stamp__icon { display: block; width: 34px; height: 34px; filter: drop-shadow(0 3px 4px rgba(48, 44, 131, 0.3)); }
+.stamp__icon svg { display: block; width: 100%; height: 100%; }
+.stamp__value {
+  position: absolute;
+  right: 8px;
+  top: 6px;
+  font: 700 10px/1 var(--font-mono);
+  color: var(--stamp-ink);
+  opacity: 0.8;
+}
+
+.stamp__name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-align: center;
+  color: var(--page-text);
+}
+.stamp__note {
+  font: 9px/1 var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--accent);
+}
+
+/* the postmark lands on hover (and stays a moment after copying the email) */
+.stamp__mark {
+  position: absolute;
+  left: 34px;
+  top: 30px;
+  width: 104px;
+  color: rgba(48, 44, 131, 0.55);
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  transform: rotate(-16deg) scale(1.5);
+  transition: opacity 0.15s, transform 0.25s cubic-bezier(0.5, 0, 0.2, 1.4);
+}
+.stamp:not(.is-off):hover .stamp__mark,
+.stamp.is-copied .stamp__mark { opacity: 0.9; transform: rotate(-12deg) scale(1); }
+
+.stamp.is-off { filter: saturate(0.4) drop-shadow(0 6px 8px rgba(48, 44, 131, 0.14)); opacity: 0.7; }
+.stamp.is-off .stamp__note { color: var(--page-text-soft); }
+
+/* ---------- right: the letter ---------- */
+.contact__desk {
+  grid-area: desk;
+  position: relative;
+  display: grid;
+  min-width: 0;
+}
+.contact__desk > .letter,
+.contact__desk > .postcard { grid-area: 1 / 1; }
+
+.letter {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  margin: 0;
+  padding: 24px clamp(20px, 3vw, 32px) 20px;
+  border-radius: 6px;
+  background:
+    radial-gradient(120% 80% at 0% 0%, rgba(240, 244, 255, 0.9), transparent 60%),
+    #FFFFFF;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow), 0 2px 0 rgba(48, 44, 131, 0.03);
+  transform: perspective(1400px) rotate(-1.2deg) rotateY(calc(var(--px) * 3deg)) rotateX(calc(var(--py) * -2deg));
+  transform-origin: 50% 60%;
+}
+.letter.is-shaking { animation: letter-shake 0.42s cubic-bezier(0.3, 0, 0.3, 1); }
+@keyframes letter-shake {
+  20% { translate: -8px 0; }
+  40% { translate: 7px 0; }
+  60% { translate: -5px 0; }
+  80% { translate: 3px 0; }
+}
+
+/* a dog-eared corner */
+.letter__fold {
+  position: absolute;
+  right: -1px;
+  top: -1px;
+  width: 30px;
+  height: 30px;
+  border-radius: 0 6px 0 6px;
+  background: linear-gradient(225deg, rgba(230, 219, 255, 0.95) 50%, #E3E9FF 50%);
+  box-shadow: -3px 3px 6px -3px rgba(48, 44, 131, 0.25);
+}
+
+.letter__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-right: 26px; }
+.letter__to { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.letter__key {
+  flex: none;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--page-text-soft);
+}
+.letter__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px 5px 5px;
+  border-radius: var(--radius-pill);
+  background: var(--c-cloud);
+  border: 1px solid var(--card-border);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.letter__chip i {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--c-blueberry), var(--c-electric));
+  font: italic 600 13px/1 var(--font-display);
+  color: #fff;
+}
+
+/* an empty stamp box in the corner; a stamp presses in when the letter is sent */
+.letter__stamp {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 52px;
+  border: 1.5px dashed var(--c-periwinkle);
+  border-radius: 4px;
+  color: transparent;
+  transition: background 0.2s, border-color 0.2s;
+}
+.letter__stamp svg { width: 20px; height: 20px; }
+.letter__stamp.is-stamped {
+  border-style: solid;
+  border-color: #fff;
+  background: linear-gradient(150deg, var(--c-blueberry), var(--c-electric));
+  color: #fff;
+  box-shadow: 0 0 0 1.5px var(--c-blueberry), 0 6px 10px -4px rgba(48, 44, 131, 0.4);
+  animation: stamp-press 0.4s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+}
+@keyframes stamp-press { from { transform: scale(1.6) rotate(-14deg); opacity: 0; } }
+
+/* the written lines: From / Reply to */
+.letter__line {
+  position: relative;
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  align-items: baseline;
+  border-bottom: 1.5px dashed var(--c-periwinkle);
+  transition: border-color 0.2s;
+}
+.letter__line:focus-within { border-bottom-style: solid; border-color: var(--accent); }
+.letter__line input {
+  min-width: 0;
+  padding: 8px 0 7px;
+  border: 0;
+  background: none;
+  outline: none;
+  font: 400 16px var(--font-body);
+  color: var(--page-text);
+}
+.letter__line input::placeholder,
+.letter__body textarea::placeholder { color: rgba(94, 91, 158, 0.55); }
+
+.has-error.letter__line { border-color: #E07AA8; }
+.letter__err {
+  grid-column: 2;
+  justify-self: end;
+  margin-top: -2px;
+  padding-bottom: 4px;
+  font: 11px/1.2 var(--font-mono);
+  letter-spacing: 0.04em;
+  color: #C2416E;
+  animation: err-in 0.3s ease both;
+}
+@keyframes err-in { from { opacity: 0; transform: translateY(-4px); } }
+
+/* About: quick-pick chips (spring in, tick when chosen) */
+.letter__topics { margin: 2px 0 0; padding: 0; border: 0; min-width: 0; }
+.letter__topics legend { float: left; margin: 9px 0 0; width: 76px; }
+.letter__topics > div { display: flex; flex-wrap: wrap; gap: 7px; }
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  padding: 7px 13px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--card-border);
+  background: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--page-text-body);
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.25s cubic-bezier(0.3, 1.6, 0.5, 1), gap 0.25s;
+}
+.chip input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.chip:hover { transform: translateY(-2px); border-color: var(--c-blueberry); }
+.chip:has(input:focus-visible) { outline: 2px solid var(--c-blueberry); outline-offset: 2px; }
+.chip__tick {
+  display: inline-block;
+  width: 0;
+  overflow: hidden;
+  font-size: 11px;
+  transform: scale(0);
+  transition: width 0.25s, transform 0.3s cubic-bezier(0.3, 1.8, 0.5, 1);
+}
+.chip.is-on {
+  gap: 6px;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--c-blueberry), var(--c-electric));
+  color: #fff;
+  box-shadow: 0 6px 14px -8px rgba(76, 98, 245, 0.8);
+}
+.chip.is-on .chip__tick { width: 10px; transform: scale(1); }
+
+/* the message: ruled lines and a pink margin, like a real letter pad */
+.letter__body { position: relative; display: block; }
+.letter__body textarea {
+  display: block;
+  width: 100%;
+  min-height: calc(1.9em * 6);
+  max-height: 34vh;
+  padding: 0 4px 0 18px;
+  border: 0;
+  outline: none;
+  resize: none;
+  font: 400 16px/1.9em var(--font-body);
+  color: var(--page-text);
+  background:
+    linear-gradient(90deg, transparent 7px, rgba(244, 184, 212, 0.95) 7px 8.5px, transparent 8.5px),
+    linear-gradient(transparent calc(1.9em - 1px), rgba(129, 155, 255, 0.32) 0);
+  background-size: 100% 100%, 100% 1.9em;
+  background-attachment: local;
+}
+.has-error.letter__body textarea {
+  background:
+    linear-gradient(90deg, transparent 7px, rgba(224, 122, 168, 0.95) 7px 8.5px, transparent 8.5px),
+    linear-gradient(transparent calc(1.9em - 1px), rgba(224, 122, 168, 0.4) 0);
+  background-size: 100% 100%, 100% 1.9em;
+  background-attachment: local;
+}
+.letter__body .letter__err { position: absolute; right: 0; bottom: -18px; }
+
+.letter__trap { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+
+.letter__foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 6px; }
+.letter__count { font: 10px var(--font-mono); letter-spacing: 0.1em; color: var(--page-text-soft); }
+
+.letter__send {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 20px 6px 6px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, #5D72FF, var(--c-electric) 55%, #3D44C9);
+  box-shadow: 0 10px 22px -10px rgba(76, 98, 245, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -2px 0 rgba(48, 44, 131, 0.35);
+  font: 600 14px var(--font-body);
+  color: #fff;
+  transition: transform 0.25s cubic-bezier(0.3, 1.6, 0.5, 1), box-shadow 0.2s;
+}
+.letter__send:hover { transform: translateY(-2px); box-shadow: 0 14px 26px -10px rgba(76, 98, 245, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -2px 0 rgba(48, 44, 131, 0.35); }
+.letter__send:active { transform: translateY(1px) scale(0.98); }
+.letter__send:disabled { opacity: 0.85; }
+/* a little wax seal on the button; it turns when you point at it */
+.letter__seal {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #FFC6DC, #E07AA8 60%, #B8467A);
+  box-shadow: inset 0 -2px 3px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(48, 44, 131, 0.3);
+  color: #fff;
+  transition: transform 0.5s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.letter__seal svg { width: 14px; height: 14px; }
+.letter__send:hover .letter__seal { transform: rotate(140deg) scale(1.05); }
+
+.letter__oops {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #FFF0F6;
+  border: 1px solid #F4B8D4;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #8E2F5C;
+}
+.letter__oops a { color: inherit; font-weight: 600; }
+
+/* ---------- sealing and sending ---------- */
+.contact__desk.is-fold .letter { animation: letter-fold 0.7s cubic-bezier(0.5, 0, 0.6, 1) 0.15s forwards; pointer-events: none; }
+.contact__desk.is-fly .letter { visibility: hidden; }
+@keyframes letter-fold {
+  0% { opacity: 1; }
+  45% { opacity: 1; transform: perspective(1400px) rotate(-1.2deg) rotateX(50deg) scale(0.8, 0.6); }
+  100% { opacity: 0; transform: perspective(1400px) rotate(0deg) rotateX(70deg) scale(0.42, 0.28) translateY(20%); }
+}
+
+.envelope {
+  --w: 240px;
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  top: 50%;
+  width: var(--w);
+  height: calc(var(--w) * 0.62);
+  margin: calc(var(--w) * -0.31) 0 0 calc(var(--w) * -0.5);
+  pointer-events: none;
+}
+.envelope__lift, .envelope__body { position: absolute; inset: 0; }
+.envelope__body { perspective: 600px; animation: env-in 0.5s cubic-bezier(0.3, 1.4, 0.5, 1) 0.4s both; }
+@keyframes env-in { from { opacity: 0; transform: scale(0.6) translateY(16px); } }
+
+.envelope__back {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: linear-gradient(160deg, #C6D5FF, #A9BCFF);
+  box-shadow: 0 24px 40px -18px rgba(48, 44, 131, 0.55);
+}
+.envelope__paper {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 8%;
+  height: 70%;
+  border-radius: 4px;
+  background: repeating-linear-gradient(#fff 0 9px, #E6ECFF 9px 10px);
+  transform: translateY(-46%);
+  animation: env-paper 0.45s cubic-bezier(0.5, 0, 0.3, 1) 0.75s forwards;
+}
+@keyframes env-paper { to { transform: translateY(6%); } }
+.envelope__front {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: linear-gradient(170deg, #E3E9FF, #CBD7FF);
+  clip-path: polygon(0 34%, 50% 64%, 100% 34%, 100% 100%, 0 100%);
+}
+.envelope__flap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 62%;
+  border-radius: 10px 10px 0 0;
+  background: linear-gradient(180deg, #B6C6FF, #9DB1FF);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: 50% 0;
+  transform: rotateX(178deg);
+  z-index: -1;
+  animation: env-flap 0.42s cubic-bezier(0.5, 0, 0.3, 1.2) 1.1s forwards;
+}
+/* once it closes it sits in front of the letter */
+@keyframes env-flap {
+  0% { transform: rotateX(178deg); z-index: -1; }
+  49% { z-index: -1; }
+  50% { z-index: 2; }
+  100% { transform: rotateX(0deg); z-index: 2; }
+}
+.envelope__seal {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  top: 62%;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #FFC6DC, #E07AA8 60%, #B8467A);
+  box-shadow: inset 0 -3px 4px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(48, 44, 131, 0.35);
+  color: #fff;
+  transform: scale(0);
+  animation: env-seal 0.4s cubic-bezier(0.3, 1.8, 0.5, 1) 1.45s forwards;
+}
+.envelope__seal svg { width: 16px; height: 16px; }
+@keyframes env-seal { to { transform: scale(1) rotate(-12deg); } }
+
+/* away it goes: a little dip, then up and off the top-right of the page */
+.contact__desk.is-fly .envelope__lift { animation: env-fly 0.9s cubic-bezier(0.5, 0, 0.7, 0.4) forwards; }
+@keyframes env-fly {
+  0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  20% { transform: translate(-10px, 16px) rotate(4deg) scale(1.02); }
+  100% { transform: translate(55vw, -85vh) rotate(-28deg) scale(0.35); opacity: 0; }
+}
+
+/* ---------- delivered ---------- */
+.postcard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: clamp(28px, 4vw, 40px);
+  border-radius: 8px;
+  background:
+    radial-gradient(120% 90% at 100% 0%, rgba(226, 220, 251, 0.7), transparent 55%),
+    radial-gradient(90% 80% at 0% 100%, rgba(251, 227, 240, 0.7), transparent 60%),
+    #fff;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+  transform: rotate(1.2deg);
+  animation: postcard-in 0.7s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
+@keyframes postcard-in { from { opacity: 0; transform: rotate(-6deg) translateY(40px) scale(0.9); } }
+.postcard__stamp {
+  position: absolute;
+  right: 22px;
+  top: 22px;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 54px;
+  border-radius: 4px;
+  background: linear-gradient(150deg, var(--c-blueberry), var(--c-electric));
+  box-shadow: 0 0 0 3px #fff, 0 0 0 4.5px var(--c-periwinkle);
+  color: #fff;
+}
+.postcard__stamp svg { width: 20px; height: 20px; }
+.postcard__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.4rem, 4vw, 3.4rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-variation-settings: "opsz" 144, "SOFT" 30;
+  color: var(--page-text);
+}
+.postcard__body { max-width: 26rem; margin: 0; font-size: 16.5px; line-height: 1.6; color: var(--page-text-body); }
+.postcard__sig {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0 8px;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 22px;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  color: var(--accent);
+}
+.postcard__again {
+  padding: 10px 18px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--card-border);
+  background: #fff;
+  font: 500 11px var(--font-mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  transition: background 0.2s, border-color 0.2s, transform 0.25s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.postcard__again:hover { background: var(--c-cloud); border-color: var(--c-blueberry); transform: translateY(-2px); }
+
+/* ---------- narrower screens: heading, tiles, the letter, then the stamps ---------- */
+@media (max-width: 960px) {
+  .contact__wrap {
+    max-width: 600px;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "heading"
+      "lede"
+      "tiles"
+      "desk"
+      "elsewhere";
+    row-gap: 0;
+  }
+  .contact__intro { display: contents; }
+  .contact__heading { grid-area: heading; }
+  .contact__lede { grid-area: lede; margin-bottom: 24px; }
+  .contact__tiles { grid-area: tiles; }
+  .contact__elsewhere { grid-area: elsewhere; margin-top: 36px; }
+}
+
+@media (max-width: 560px) {
+  .contact__heading { font-size: clamp(2.4rem, 12vw, 4rem); }
+  .stamp { width: 88px; }
+  .stamp__art { height: 62px; }
+  .stamp__icon { width: 28px; height: 28px; }
+  .letter__line, .letter__topics legend { grid-template-columns: 64px minmax(0, 1fr); }
+  .letter__topics legend { width: 64px; }
+  .envelope { --w: 200px; }
+
+}

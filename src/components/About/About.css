@@ -13,9 +13,14 @@
   padding-left: max(24px, env(safe-area-inset-left, 0px));
   padding-right: max(24px, env(safe-area-inset-right, 0px));
   transition: --px 0.9s cubic-bezier(0.2, 0.8, 0.2, 1), --py 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* About is the crisp white page with cool blue color fields */
+  background: #FBFCFF;
+  --b1: var(--c-periwinkle);
+  --b2: #DCE5FF;
+  --b3: #E2DCFB;
 }
 
-/* the soft pastel background is .soft-bg in styles/global.css */
+/* the color fields are .soft-bg in styles/global.css */
 
 /* ---------- layout ----------
        .      heading   .
@@ -50,6 +55,7 @@
 .about__plush { height: var(--h); }
 
 /* ---------- heading + intro ---------- */
+/* plain heading: one weight, one style, no highlighted word */
 .about__heading {
   grid-area: heading;
   margin: 0;
@@ -61,24 +67,6 @@
   letter-spacing: -0.045em;
   font-variation-settings: "opsz" 144, "SOFT" 30;
   color: var(--page-text);
-}
-
-.about__heading em {
-  font-style: italic;
-  font-weight: 450;
-  padding-right: 0.06em;
-  font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
-  background: var(--highlight-gradient) no-repeat 0 86% / 100% 0.2em;
-}
-
-/* the highlight under "me." sweeps in */
-.page.is-current .about__heading em { animation: highlight-in 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.75s both; }
-.page.is-entering .about__heading em { animation-delay: 1.2s; }
-html:not([data-loaded]) .about__heading em { animation-play-state: paused; }
-
-@keyframes highlight-in {
-  from { background-size: 0% 0.2em; }
-  to { background-size: 100% 0.2em; }
 }
 
 .about__card {

@@ -6,6 +6,7 @@ import Hero from './components/Hero/Hero.jsx';
 import About from './components/About/About.jsx';
 import Journey from './components/Journey/Journey.jsx';
 import Desktop from './components/Desktop/Desktop.jsx';
+import Contact from './components/Contact/Contact.jsx';
 import Cursor from './components/Cursor/Cursor.jsx';
 
 // Every page of the site, in order. `id` is its address (#about); the first page has no hash.
@@ -13,8 +14,9 @@ import Cursor from './components/Cursor/Cursor.jsx';
 const PAGES = [
   { id: 'top', aliases: ['', 'home'], label: 'Home', render: (p) => <Hero {...p} /> },
   { id: 'about', label: 'About', render: (p) => <About {...p} /> },
-  { id: 'journey', label: 'Journey', render: (p) => <Journey {...p} /> },
+  { id: 'journey', aliases: ['experience'], label: 'Experience', render: (p) => <Journey {...p} /> },
   { id: 'projects', label: 'Projects', render: (p) => <Desktop {...p} /> },
+  { id: 'contact', label: 'Contact', render: (p) => <Contact {...p} /> },
 ];
 
 export default function App() {
